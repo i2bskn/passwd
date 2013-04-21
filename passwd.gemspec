@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["i2bskn@gmail.com"]
   spec.description   = %q{The various utilities on password}
   spec.summary       = %q{Password utility}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/i2bskn/passwd"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)
