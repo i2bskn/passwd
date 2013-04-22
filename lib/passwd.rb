@@ -4,7 +4,7 @@ require "passwd/version"
 require "digest/sha1"
 
 class Passwd
-  attr_reader :text, :hash
+  attr_reader :text, :hash, :salt_text, :salt_hash
   @@config = {
     length: 8,
     lower: true,
@@ -24,8 +24,8 @@ class Passwd
     require_number: true
   }
 
-  def initialize(password=nil)
-    if password.nil?
+  def initialize(options={password: nil, salt_text: Time.now.to_s})
+    if options[:password].nil?
       # Create letters
       letters = Array.new
       letters += @@config[:letters_lower] if @@config[:lower]
@@ -35,20 +35,43 @@ class Passwd
       # Create random password
       @text = Array.new(@@config[:length]){letters[rand(letters.size)]}.join
     else
-      @text = password
+      @text = options[:password]
     end
     # @text = password.nil? ? self.class.create : password
-    @hash = Passwd.hashing(@text)
+    @salt_text = options[:salt_text] || Time.now.to_s
+    @salt_hash = Passwd.hashing(@salt_text)
+    @hash = Passwd.hashing("#{@salt_hash}#{@text}")
   end
 
   def text=(password)
+    @hash = Passwd.hashing("#{@salt_hash}#{password}")
     @text = password
-    @hash = Passwd.hashing(@text)
-    @text
+  end
+
+  def hash=(password_hash)
+    @text = nil
+    @hash = password_hash
+  end
+
+  def salt_text=(salt_text)
+    @salt_hash = Passwd.hashing(salt_text)
+    @hash = Passwd.hashing("#{@salt_hash}#{@text}")
+    @salt_text = salt_text
+  end
+
+  def salt_hash=(salt_hash)
+    @salt_text = nil
+    @hash = Passwd.hashing("#{salt_hash}#{@text}")
+    @salt_hash = salt_hash
   end
 
   def policy_check
     Passwd.policy_check @text
+  end
+
+  def ==(password)
+    enc_pass = Passwd.hashing("#{@salt_hash}#{password}")
+    @hash == enc_pass
   end
 
   class << self
@@ -91,6 +114,11 @@ class Passwd
       end
 
       true
+    end
+
+    def auth(password_text, salt_hash, password_hash)
+      enc_pass = Passwd.hashing("#{salt_hash}#{password_text}")
+      password_hash == enc_pass
     end
 
     def hashing(passwd)
