@@ -78,7 +78,7 @@ describe Passwd do
 
       it "return hashed password" do
         password = Passwd.create
-        password_hash = Digest::SHA1.digest(password)
+        password_hash = Digest::SHA1.hexdigest(password)
         expect(Passwd.hashing(password)).to eq(password_hash)
       end
     end
@@ -141,7 +141,7 @@ describe Passwd do
 
       it "@hash is hash of specified password" do
         pass_text = Passwd.create
-        pass_hash = Digest::SHA1.digest(pass_text)
+        pass_hash = Digest::SHA1.hexdigest(pass_text)
         password = Passwd.new(pass_text)
         expect(password.hash).to eq(pass_hash)
       end

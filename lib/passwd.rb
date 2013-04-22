@@ -38,12 +38,12 @@ class Passwd
       @text = password
     end
     # @text = password.nil? ? self.class.create : password
-    @hash = Digest::SHA1.digest @text
+    @hash = Passwd.hashing(@text)
   end
 
   def text=(password)
     @text = password
-    @hash = Digest::SHA1.digest @text
+    @hash = Passwd.hashing(@text)
     @text
   end
 
@@ -94,7 +94,7 @@ class Passwd
     end
 
     def hashing(passwd)
-      Digest::SHA1.digest passwd
+      Digest::SHA1.hexdigest passwd
     end
 
     def config(options={})
