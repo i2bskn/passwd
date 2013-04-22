@@ -1,5 +1,7 @@
 # Passwd
 
+[![Build Status](https://travis-ci.org/i2bskn/passwd.png?branch=master)](https://travis-ci.org/i2bskn/passwd)
+
 Password utility
 
 ## Installation
@@ -84,7 +86,7 @@ Password authenticate:
     password = Passwd.new
     Passwd.auth(password.text, password.salt_hash, password.hash) # => true
     Passwd.auth("invalid!!", password.salt_hash, password.hash) # => false
-    
+
     password == password.text # => true
     password == "invalid!!" # => false
 
