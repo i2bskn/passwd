@@ -34,6 +34,12 @@ Options that can be specified:
 * :letters_upper => Define an array of upper case. default is ("A".."Z").to_a
 * :letters_number => Define an array of numbers. default is ("0".."9").to_a
 
+Default config is stored in the class variable. (@@config)
+Changing the default configs are as follows:
+
+    Passwd.config => Get config hash.
+    Passwd.config(length: 10) => Change to the default length.
+
 Password hashing:
 
     password_hash = Passwd.hashing(password)
@@ -50,6 +56,37 @@ Options that can be specified:
 * :require_lower => Require lower case if set true. specify_type enabled when true.
 * :require_upper => Require upper case if set true. specify_type enabled when true.
 * :require_number => Require number case if set true. specify_type enabled when true.
+
+Default policy is stored in the class variable. (@@policy)
+Changing the default policy are as follows:
+
+    Passwd.policy => Get policy hash.
+    Passwd.policy(min_length: 10) => Change to the default min_length.
+
+Passwd object:
+
+Default password is randomly generated.
+Default salt is "#{Time.now.to_s}".
+
+    password = Passwd.new
+    password.text # return text password.
+    password.salt_text # return text salt.
+    password.salt_hash # return hash salt.
+    password.hash # return hash password.
+
+Options that can be specified:
+
+* :password => Text password. default is random.
+* :salt_text => Text salt. default is #{Time.now.to_s}.
+
+Password authenticate:
+
+    password = Passwd.new
+    Passwd.auth(password.text, password.salt_hash, password.hash) # => true
+    Passwd.auth("invalid!!", password.salt_hash, password.hash) # => false
+    
+    password == password.text # => true
+    password == "invalid!!" # => false
 
 ## Contributing
 
