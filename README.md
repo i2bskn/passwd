@@ -70,7 +70,7 @@ Passwd object:
 Default password is randomly generated.
 Default salt is "#{Time.now.to_s}".
 
-    password = Passwd.new
+    password = Passwd::Password.new
     password.text # return text password.
     password.salt_text # return text salt.
     password.salt_hash # return hash salt.
@@ -83,7 +83,7 @@ Options that can be specified:
 
 Password authenticate:
 
-    password = Passwd.new
+    password = Passwd::Password.new
     Passwd.auth(password.text, password.salt_hash, password.hash) # => true
     Passwd.auth("invalid!!", password.salt_hash, password.hash) # => false
 

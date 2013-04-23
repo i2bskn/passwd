@@ -1,3 +1,3 @@
-class Passwd
-  VERSION = "0.0.3"
+module Passwd
+  VERSION = "0.0.4"
 end
