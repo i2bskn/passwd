@@ -5,7 +5,7 @@ require 'rspec/core/rake_task'
 
 task default: [:spec]
 
-desc "run spec"
+desc "Run all specs"
 RSpec::Core::RakeTask.new(:spec) do |t|
   t.rspec_opts = ["-c", "-fs"]
 end

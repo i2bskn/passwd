@@ -1,9 +1,4 @@
-# coding: utf-8
-
-$:.unshift File.join(File.dirname(__FILE__),'..','lib')
-
-require "passwd"
-require "digest/sha1"
+require "spec_helper"
 
 describe Passwd do
   describe "singleton methods" do

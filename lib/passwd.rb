@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require "passwd/version"
 require "digest/sha1"
 
@@ -26,7 +24,7 @@ module Passwd
   class Password
     attr_reader :text, :hash, :salt_text, :salt_hash
 
-    def initialize(options={password: nil, salt_text: Time.now.to_s})
+    def initialize(options={})
       @text = options[:password].nil? ? Passwd.create : options[:password]
       @salt_text = options[:salt_text] || Time.now.to_s
       @salt_hash = Passwd.hashing(@salt_text)
