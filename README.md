@@ -2,13 +2,15 @@
 
 [![Build Status](https://travis-ci.org/i2bskn/passwd.png?branch=master)](https://travis-ci.org/i2bskn/passwd)
 
-Password utility
+Password utilities.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
-    gem 'passwd'
+```ruby
+gem 'passwd'
+```
 
 And then execute:
 
@@ -20,11 +22,33 @@ Or install it yourself as:
 
 ## Usage
 
-    require 'passwd'
+```ruby
+require 'passwd'
+```
 
-Create random password:
+### Create random password
 
-    password = Passwd.create
+```ruby
+password = Passwd.create
+```
+
+### Hashing password
+
+Hashing with SHA1.
+
+```ruby
+password_hash = Passwd.hashing(password)
+```
+
+### Password settings
+
+Default config is stored in the class variable. (@@config)
+Changing the default configs are as follows:
+
+```ruby
+Passwd.config => Get config hash.
+Passwd.config(length: 10) => Change to the default length.
+```
 
 Options that can be specified:
 
@@ -36,19 +60,21 @@ Options that can be specified:
 * :letters_upper => Define an array of upper case. default is ("A".."Z").to_a
 * :letters_number => Define an array of numbers. default is ("0".."9").to_a
 
-Default config is stored in the class variable. (@@config)
-Changing the default configs are as follows:
+### Password policy check
 
-    Passwd.config => Get config hash.
-    Passwd.config(length: 10) => Change to the default length.
+```ruby
+Passwd.policy_check(password)
+```
 
-Password hashing:
+### Policy settings
 
-    password_hash = Passwd.hashing(password)
+Default policy is stored in the class variable. (@@policy)
+Changing the default policy are as follows:
 
-Password policy check:
-
-    Passwd.policy_check(password)
+```ruby
+Passwd.policy => Get policy hash.
+Passwd.policy(min_length: 10) => Change to the default min_length.
+```
 
 Options that can be specified:
 
@@ -59,22 +85,18 @@ Options that can be specified:
 * :require_upper => Require upper case if set true. specify_type enabled when true.
 * :require_number => Require number case if set true. specify_type enabled when true.
 
-Default policy is stored in the class variable. (@@policy)
-Changing the default policy are as follows:
-
-    Passwd.policy => Get policy hash.
-    Passwd.policy(min_length: 10) => Change to the default min_length.
-
-Passwd object:
+### Password object
 
 Default password is randomly generated.
 Default salt is "#{Time.now.to_s}".
 
-    password = Passwd::Password.new
-    password.text # return text password.
-    password.salt_text # return text salt.
-    password.salt_hash # return hash salt.
-    password.hash # return hash password.
+```ruby
+password = Passwd::Password.new
+password.text # return text password.
+password.salt_text # return text salt.
+password.salt_hash # return hash salt.
+password.hash # return hash password.
+```
 
 Options that can be specified:
 
@@ -83,12 +105,14 @@ Options that can be specified:
 
 Password authenticate:
 
-    password = Passwd::Password.new
-    Passwd.auth(password.text, password.salt_hash, password.hash) # => true
-    Passwd.auth("invalid!!", password.salt_hash, password.hash) # => false
+```ruby
+password = Passwd::Password.new
+Passwd.auth(password.text, password.salt_hash, password.hash) # => true
+Passwd.auth("invalid!!", password.salt_hash, password.hash) # => false
 
-    password == password.text # => true
-    password == "invalid!!" # => false
+password == password.text # => true
+password == "invalid!!" # => false
+```
 
 ## Contributing
 
