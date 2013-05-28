@@ -114,6 +114,67 @@ password == password.text # => true
 password == "invalid!!" # => false
 ```
 
+## For ActiveRecord User model
+
+model:
+
+```ruby
+class User < ActiveRecord::Base
+  include Passwd::ActiveRecord
+  # if not specified arguments for define_column => {id: :email, salt: :salt, password: :password}
+  define_column id: :id_colname, salt: :salt_colname, password: :password_colname
+
+  ...
+end
+```
+
+Authentication:
+
+```ruby
+user = User.authenticate("foo@example.com", "secret") # => return user object or nil.
+
+if user
+  puts "Hello #{user.name}!"
+else
+  puts "Authentication failed"
+end
+```
+
+```ruby
+user = User.find(params[:id])
+if user.authenticate("secret") # => return true or false
+  puts "Authentication is successful!"
+else
+  puts "Authentication failed!"
+end
+```
+
+Change passowrd:
+
+```ruby
+user = User.find(params[:id])
+# set random password. (salt also set if salt is nil)
+# return set password text.
+# set specified password if specified argument.
+#   user.set_password("secret")
+password_text = user.set_password
+
+if user.save
+  NoticeMailer.change_mail(user, password_text).deliver
+end
+```
+
+```ruby
+user.find(params[:id])
+if user.update_password(old_pass, new_pass) # => return new password(text) or false
+  if user.save
+    NoticeMailer.change_mail(user, password_text).deliver
+  end
+else
+  puts "Authentication failed!"
+end
+```
+
 ## Contributing
 
 1. Fork it

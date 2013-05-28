@@ -4,6 +4,7 @@ require "digest/sha1"
 
 require "passwd/version"
 require "passwd/password"
+require "passwd/active_record"
 
 module Passwd
   @@config = {
