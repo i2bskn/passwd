@@ -1,5 +1,6 @@
 # Passwd
 
+[![Gem Version](https://badge.fury.io/rb/passwd.png)](http://badge.fury.io/rb/passwd)
 [![Build Status](https://travis-ci.org/i2bskn/passwd.png?branch=master)](https://travis-ci.org/i2bskn/passwd)
 
 Password utilities.
