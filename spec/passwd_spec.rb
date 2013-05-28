@@ -33,41 +33,6 @@ describe Passwd do
       end
     end
 
-    context "#policy_check" do
-      it "return true with valid password" do
-        expect(Passwd.policy_check("09aVCud5")).to eq(true)
-      end
-
-      it "return false with less number of characters" do
-        expect(Passwd.policy_check("Secret")).to eq(false)
-      end
-
-      it "return false with less number of types" do
-        expect(Passwd.policy_check("password")).to eq(false)
-      end
-
-      it "require lower case if require_lower is true" do
-        password = Passwd.create(lower: false)
-        expect(
-          Passwd.policy_check(password, min_type: 1, specify_type: true, require_lower: true)
-        ).to eq(false)
-      end
-
-      it "require upper case if require_upper is true" do
-        password = Passwd.create(upper: false)
-        expect(
-          Passwd.policy_check(password, min_type: 1, specify_type: true, require_upper: true)
-        ).to eq(false)
-      end
-
-      it "require number case if require_number is true" do
-        password = Passwd.create(number: false)
-        expect(
-          Passwd.policy_check(password, min_type: 1, specify_type: true, require_number: true)
-        ).to eq(false)
-      end
-    end
-
     context "#auth" do
       it "return true with valid password" do
         password = Passwd.create
@@ -113,26 +78,6 @@ describe Passwd do
         old_value = Passwd.config[:length]
         Passwd.config(length: 10)
         expect(Passwd.config[:length]).not_to eq(old_value)
-      end
-    end
-
-    context "#policy" do
-      before(:all) do
-        @default_value = Passwd.policy.clone
-      end
-
-      after(:all) do
-        Passwd.policy(@default_value)
-      end
-
-      it "return policy hash" do
-        expect(Passwd.policy.class).to eq(Hash)
-      end
-
-      it "set config value" do
-        old_value = Passwd.policy[:min_length]
-        Passwd.policy(min_length: 10)
-        expect(Passwd.policy[:min_length]).not_to eq(old_value)
       end
     end
   end

@@ -33,10 +33,6 @@ module Passwd
       @salt_hash = salt_hash
     end
 
-    def policy_check
-      Passwd.policy_check @text
-    end
-
     def ==(password)
       enc_pass = Passwd.hashing("#{@salt_hash}#{password}")
       @hash == enc_pass

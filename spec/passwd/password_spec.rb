@@ -122,15 +122,6 @@ describe Passwd::Password do
     end
   end
 
-  context "#policy_check" do
-    it "Passwd.policy_check is called with pass_text" do
-      pass_text = Passwd.create
-      Passwd.should_receive(:policy_check).with(pass_text)
-      password = Passwd::Password.new(password: pass_text)
-      password.policy_check
-    end
-  end
-
   context "#==" do
     before(:each) do
       @password = Passwd::Password.new
