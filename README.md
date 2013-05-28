@@ -62,31 +62,6 @@ Options that can be specified:
 * :letters_upper => Define an array of upper case. default is ("A".."Z").to_a
 * :letters_number => Define an array of numbers. default is ("0".."9").to_a
 
-### Password policy check
-
-```ruby
-Passwd.policy_check(password)
-```
-
-### Policy settings
-
-Default policy is stored in the class variable. (@@policy)
-Changing the default policy are as follows:
-
-```ruby
-Passwd.policy => Get policy hash.
-Passwd.policy(min_length: 10) => Change to the default min_length.
-```
-
-Options that can be specified:
-
-* :min_length => Minimum length of password. default is 8.
-* :min_type => Minimum types of password. default is 2.(types is lower/upper/number)
-* :specify_type => Check of each types. default is false.
-* :require_lower => Require lower case if set true. specify_type enabled when true.
-* :require_upper => Require upper case if set true. specify_type enabled when true.
-* :require_number => Require number case if set true. specify_type enabled when true.
-
 ### Password object
 
 Default password is randomly generated.
