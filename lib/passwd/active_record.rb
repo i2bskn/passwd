@@ -8,6 +8,12 @@ module Passwd
         saltc = options[:salt] || :salt
         passwordc = options[:password] || :password
 
+        define_authenticate(idc, saltc, passwordc)
+        define_password(idc, saltc, passwordc)
+      end
+
+      private
+      def define_authenticate(idc, saltc, passwordc)
         define_singleton_method :authenticate do |id, pass|
           user = self.where(idc => id).first
           user if user && Passwd.auth(pass, user.send(saltc), user.send(passwordc))
@@ -16,7 +22,9 @@ module Passwd
         define_method :authenticate do |pass|
           Passwd.auth(pass, self.send(saltc), self.send(passwordc))
         end
+      end
 
+      def define_password(idc, saltc, passwordc)
         define_method :set_password do |pass=nil|
           password = pass || Passwd.create
           salt = self.send(saltc) || Passwd.hashing("#{self.send(idc)}#{Time.now.to_s}")
@@ -36,8 +44,8 @@ module Passwd
     end
 
     class << self
-      def included(klass)
-        klass.extend ClassMethods
+      def included(base)
+        base.extend ClassMethods
       end
     end
   end
