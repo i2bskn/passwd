@@ -19,20 +19,9 @@ module Passwd
 
   class << self
     def create(options={})
-      config = @@config.merge(options)
+      config = @@config.merge(config_validator(options))
       letters = get_retters(config)
-
-      # Create random password
       Array.new(config[:length]){letters[rand(letters.size)]}.join
-    end
-
-    def get_retters(config)
-      # Create letters
-      letters = Array.new
-      letters += config[:letters_lower] if config[:lower]
-      letters += config[:letters_upper] if config[:upper]
-      letters += config[:letters_number] if config[:number]
-      letters
     end
 
     def auth(password_text, salt_hash, password_hash)
@@ -40,12 +29,26 @@ module Passwd
       password_hash == enc_pass
     end
 
-    def hashing(passwd)
-      Digest::SHA1.hexdigest passwd
+    def hashing(password)
+      Digest::SHA1.hexdigest password
     end
 
     def config(options={})
-      @@config.merge!(options)
+      @@config.merge!(config_validator(options))
+    end
+
+    private
+    def get_retters(config)
+      ["lower", "upper", "number"].inject([]) do |letters, type|
+        letters.concat(config["letters_#{type}".to_sym]) if config[type.to_sym]
+        letters
+      end
+    end
+
+    def config_validator(config_hash)
+      parameters = [:length, :lower, :upper, :number, :letters_lower, :letters_upper, :letters_number]
+      config = config_hash.inject({}){|r, (k, v)| r.store(k.to_sym, v); r}
+      config.select{|k, v| parameters.include? k}
     end
   end
 end
