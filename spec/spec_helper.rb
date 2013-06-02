@@ -1,7 +1,7 @@
-require "passwd"
-
 require "coveralls"
 Coveralls.wear!
+
+require "passwd"
 
 RSpec.configure do |config|
   config.order = "random"
