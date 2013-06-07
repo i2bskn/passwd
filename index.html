@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <title>Passwd by i2bskn</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Passwd</h1>
+        <h2>Password utilities.</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/i2bskn/passwd/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/i2bskn/passwd/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/i2bskn/passwd" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>Add this line to your application's Gemfile:</p>
+
+<div class="highlight"><pre><span class="n">gem</span> <span class="s1">'passwd'</span>
+</pre></div>
+
+<p>And then execute:</p>
+
+<pre><code>$ bundle
+</code></pre>
+
+<p>Or install it yourself as:</p>
+
+<pre><code>$ gem install passwd
+</code></pre>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<div class="highlight"><pre><span class="nb">require</span> <span class="s1">'passwd'</span>
+</pre></div>
+
+<h3>
+<a name="create-random-password" class="anchor" href="#create-random-password"><span class="octicon octicon-link"></span></a>Create random password</h3>
+
+<div class="highlight"><pre><span class="n">password</span> <span class="o">=</span> <span class="no">Passwd</span><span class="o">.</span><span class="n">create</span>
+</pre></div>
+
+<h3>
+<a name="hashing-password" class="anchor" href="#hashing-password"><span class="octicon octicon-link"></span></a>Hashing password</h3>
+
+<p>Hashing with SHA1.</p>
+
+<div class="highlight"><pre><span class="n">password_hash</span> <span class="o">=</span> <span class="no">Passwd</span><span class="o">.</span><span class="n">hashing</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
+</pre></div>
+
+<h3>
+<a name="password-settings" class="anchor" href="#password-settings"><span class="octicon octicon-link"></span></a>Password settings</h3>
+
+<p>Default config is stored in the class variable. (@<a href="https://github.com/config" class="user-mention">@config</a>)
+Changing the default configs are as follows:</p>
+
+<div class="highlight"><pre><span class="no">Passwd</span><span class="o">.</span><span class="n">config</span> <span class="o">=&gt;</span> <span class="no">Get</span> <span class="n">config</span> <span class="nb">hash</span><span class="o">.</span>
+<span class="no">Passwd</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="ss">length</span><span class="p">:</span> <span class="mi">10</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="no">Change</span> <span class="n">to</span> <span class="n">the</span> <span class="n">default</span> <span class="n">length</span><span class="o">.</span>
+</pre></div>
+
+<p>Options that can be specified:</p>
+
+<ul>
+<li>:length =&gt; Number of characters. default is 8.</li>
+<li>:lower =&gt; Skip lower case if set false. default is true.</li>
+<li>:upper =&gt; Skip upper case if set false. default is true.</li>
+<li>:number =&gt; Skip numbers if set false. default is true.</li>
+<li>:letters_lower =&gt; Define an array of lower case. default is ("a".."z").to_a</li>
+<li>:letters_upper =&gt; Define an array of upper case. default is ("A".."Z").to_a</li>
+<li>:letters_number =&gt; Define an array of numbers. default is ("0".."9").to_a</li>
+</ul><h3>
+<a name="password-object" class="anchor" href="#password-object"><span class="octicon octicon-link"></span></a>Password object</h3>
+
+<p>Default password is randomly generated.
+Default salt is "#{Time.now.to_s}".</p>
+
+<div class="highlight"><pre><span class="n">password</span> <span class="o">=</span> <span class="ss">Passwd</span><span class="p">:</span><span class="ss">:Password</span><span class="o">.</span><span class="n">new</span>
+<span class="n">password</span><span class="o">.</span><span class="n">text</span> <span class="c1"># return text password.</span>
+<span class="n">password</span><span class="o">.</span><span class="n">salt_text</span> <span class="c1"># return text salt.</span>
+<span class="n">password</span><span class="o">.</span><span class="n">salt_hash</span> <span class="c1"># return hash salt.</span>
+<span class="n">password</span><span class="o">.</span><span class="n">hash</span> <span class="c1"># return hash password.</span>
+</pre></div>
+
+<p>Options that can be specified:</p>
+
+<ul>
+<li>:password =&gt; Text password. default is random.</li>
+<li>:salt_text =&gt; Text salt. default is #{Time.now.to_s}.</li>
+</ul><p>Password authenticate:</p>
+
+<div class="highlight"><pre><span class="n">password</span> <span class="o">=</span> <span class="ss">Passwd</span><span class="p">:</span><span class="ss">:Password</span><span class="o">.</span><span class="n">new</span>
+<span class="no">Passwd</span><span class="o">.</span><span class="n">auth</span><span class="p">(</span><span class="n">password</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">password</span><span class="o">.</span><span class="n">salt_hash</span><span class="p">,</span> <span class="n">password</span><span class="o">.</span><span class="n">hash</span><span class="p">)</span> <span class="c1"># =&gt; true</span>
+<span class="no">Passwd</span><span class="o">.</span><span class="n">auth</span><span class="p">(</span><span class="s2">"invalid!!"</span><span class="p">,</span> <span class="n">password</span><span class="o">.</span><span class="n">salt_hash</span><span class="p">,</span> <span class="n">password</span><span class="o">.</span><span class="n">hash</span><span class="p">)</span> <span class="c1"># =&gt; false</span>
+
+<span class="n">password</span> <span class="o">==</span> <span class="n">password</span><span class="o">.</span><span class="n">text</span> <span class="c1"># =&gt; true</span>
+<span class="n">password</span> <span class="o">==</span> <span class="s2">"invalid!!"</span> <span class="c1"># =&gt; false</span>
+</pre></div>
+
+<h2>
+<a name="for-activerecord-user-model" class="anchor" href="#for-activerecord-user-model"><span class="octicon octicon-link"></span></a>For ActiveRecord User model</h2>
+
+<p>model:</p>
+
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+  <span class="kp">include</span> <span class="ss">Passwd</span><span class="p">:</span><span class="ss">:ActiveRecord</span>
+  <span class="c1"># if not specified arguments for define_column =&gt; {id: :email, salt: :salt, password: :password}</span>
+  <span class="n">define_column</span> <span class="nb">id</span><span class="p">:</span> <span class="ss">:id_colname</span><span class="p">,</span> <span class="ss">salt</span><span class="p">:</span> <span class="ss">:salt_colname</span><span class="p">,</span> <span class="ss">password</span><span class="p">:</span> <span class="ss">:password_colname</span>
+
+  <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+<span class="k">end</span>
+</pre></div>
+
+<p>Authentication:</p>
+
+<div class="highlight"><pre><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="s2">"foo@example.com"</span><span class="p">,</span> <span class="s2">"secret"</span><span class="p">)</span> <span class="c1"># =&gt; return user object or nil.</span>
+
+<span class="k">if</span> <span class="n">user</span>
+  <span class="nb">puts</span> <span class="s2">"Hello </span><span class="si">#{</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">!"</span>
+<span class="k">else</span>
+  <span class="nb">puts</span> <span class="s2">"Authentication failed"</span>
+<span class="k">end</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="s2">"secret"</span><span class="p">)</span> <span class="c1"># =&gt; return true or false</span>
+  <span class="nb">puts</span> <span class="s2">"Authentication is successful!"</span>
+<span class="k">else</span>
+  <span class="nb">puts</span> <span class="s2">"Authentication failed!"</span>
+<span class="k">end</span>
+</pre></div>
+
+<p>Change passowrd:</p>
+
+<div class="highlight"><pre><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
+<span class="c1"># set random password. (salt also set if salt is nil)</span>
+<span class="c1"># return set password text.</span>
+<span class="c1"># set specified password if specified argument.</span>
+<span class="c1">#   user.set_password("secret")</span>
+<span class="n">password_text</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">set_password</span>
+
+<span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">save</span>
+  <span class="no">NoticeMailer</span><span class="o">.</span><span class="n">change_mail</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">password_text</span><span class="p">)</span><span class="o">.</span><span class="n">deliver</span>
+<span class="k">end</span>
+</pre></div>
+
+<div class="highlight"><pre><span class="n">user</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">update_password</span><span class="p">(</span><span class="n">old_pass</span><span class="p">,</span> <span class="n">new_pass</span><span class="p">)</span> <span class="c1"># =&gt; return new password(text) or false</span>
+  <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">save</span>
+    <span class="no">NoticeMailer</span><span class="o">.</span><span class="n">change_mail</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">password_text</span><span class="p">)</span><span class="o">.</span><span class="n">deliver</span>
+  <span class="k">end</span>
+<span class="k">else</span>
+  <span class="nb">puts</span> <span class="s2">"Authentication failed!"</span>
+<span class="k">end</span>
+</pre></div>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
