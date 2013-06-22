@@ -51,6 +51,10 @@ Changing the default configs are as follows:
 ```ruby
 Passwd.config => Get config hash.
 Passwd.config(length: 10) => Change to the default length.
+
+Passwd.configure do |c|
+  c.length = 10
+end
 ```
 
 Options that can be specified:
