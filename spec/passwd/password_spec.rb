@@ -3,7 +3,6 @@
 require "spec_helper"
 
 describe Passwd::Password do
-  let(:default) {@default}
   let(:password) {Passwd::Password.new}
 
   describe "#initialize" do
@@ -21,7 +20,7 @@ describe Passwd::Password do
       }
 
       it "@text should be a random password" do
-        expect(password.text.size).to eq(default[:length])
+        expect(password.text.size).to eq(8)
         expect(password.text).to eq(password_text)
       end
 

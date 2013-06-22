@@ -3,45 +3,13 @@
 require "spec_helper"
 
 describe Passwd do
-  let(:default) {@default}
-
-  describe "default settings" do
-    let(:config) {Passwd.config}
-
-    it "length should be a default" do
-      expect(config[:length]).to eq(default[:length])
-    end
-
-    it "lower should be a default" do
-      expect(config[:lower]).to eq(default[:lower])
-    end
-
-    it "upper should be a default" do
-      expect(config[:upper]).to eq(default[:upper])
-    end
-
-    it "number should be a default" do
-      expect(config[:number]).to eq(default[:number])
-    end
-
-    it "letters_lower should be a default" do
-      expect(config[:letters_lower]).to eq(default[:letters_lower])
-    end
-
-    it "letters_upper should be a default" do
-      expect(config[:letters_upper]).to eq(default[:letters_upper])
-    end
-
-    it "letters_number should be a default" do
-      expect(config[:letters_number]).to eq(default[:letters_number])
-    end
-  end
+  let(:default) {Passwd::Configuration.new}
 
   describe ".create" do
     it "create random password" do
       password = Passwd.create
       expect(password.is_a? String).to be_true
-      expect(password.size).to eq(default[:length])
+      expect(password.size).to eq(default.length)
     end
 
     it "password was created specified characters" do
@@ -50,17 +18,17 @@ describe Passwd do
 
     it "password create without lower case" do
       password = Passwd.create lower: false
-      expect(default[:letters_lower].include? password).to be_false
+      expect(default.letters_lower.include? password).to be_false
     end
 
     it "password create without upper case" do
       password = Passwd.create upper: false
-      expect(default[:letters_upper].include? password).to be_false
+      expect(default.letters_upper.include? password).to be_false
     end
 
     it "password create without number" do
       password = Passwd.create(number: false)
-      expect(default[:letters_number].include? password).to be_false
+      expect(default.letters_number.include? password).to be_false
     end
   end
 
@@ -96,42 +64,74 @@ describe Passwd do
     end
   end
 
-  describe ".config" do
-    after {Passwd.config(default)}
+  describe ".configure" do
+    after {Passwd.reset_config}
 
-    it "return config hash" do
-      expect(Passwd.config.is_a? Hash).to be_true
+    it "return configuration object" do
+      expect(Passwd.configure.is_a? Passwd::Configuration).to be_true
     end
 
-    it "set config value" do
-      Passwd.config(length: 10)
-      expect(Passwd.config[:length]).not_to eq(default[:length])
-      expect(Passwd.config[:lower]).to eq(default[:lower])
+    it "set config value from block" do
+      Passwd.configure do |c|
+        c.length = 10
+      end
+      expect(Passwd.configure.length).not_to eq(default.length)
+      expect(Passwd.configure.length).to eq(10)
+    end
+
+    it "set config value from hash" do
+      Passwd.configure length: 20
+      expect(Passwd.config.length).not_to eq(default.length)
+      expect(Passwd.config.length).to eq(20)
+    end
+
+    it "alias of configure as config" do
+      expect(Passwd.configure.object_id).to eq(Passwd.config.object_id)
     end
   end
 
-  describe ".get_retters" do
-    it "return letters" do
-      letters = Passwd.send(:get_retters, default)
-      expect(letters.is_a? Array).to be_true
-      expect(letters.select{|s| s.is_a? String}).to eq(letters)
-      expect(letters).to eq(default[:letters_lower] + default[:letters_upper] + default[:letters_number])
+  describe ".reset_config" do
+    let(:config) {Passwd.config}
+    
+    before {
+      config.configure do |c|
+        c.length = 20
+        c.lower = false
+        c.upper = false
+        c.number = false
+        c.letters_lower = ["a"]
+        c.letters_upper = ["A"]
+        c.letters_number = ["0"]
+      end
+      config.reset
+    }
+
+    it "length should be a default" do
+      expect(config.length).to eq(8)
     end
 
-    it "should create exception if not specified argument" do
-      expect(proc{Passwd.send(:get_retters)}).to raise_error
-    end
-  end
-
-  describe ".config_validator" do
-    it "convert to symbol the key" do
-      config = default.inject({}){|r, (k, v)| r.store(k.to_s, v); r}
-      expect(Passwd.send(:config_validator, config)).to eq(default)
+    it "lower should be a default" do
+      expect(config.lower).to be_true
     end
 
-    it "delete not defined parameters" do
-      config = default.merge(invalid_parameter: true)
-      expect(Passwd.send(:config_validator, config)).to eq(default)
+    it "upper should be a default" do
+      expect(config.upper).to be_true
+    end
+
+    it "number should be a default" do
+      expect(config.number).to be_true
+    end
+
+    it "letters_lower should be a default" do
+      expect(config.letters_lower).to eq(("a".."z").to_a)
+    end
+
+    it "letters_upper should be a default" do
+      expect(config.letters_upper).to eq(("A".."Z").to_a)
+    end
+
+    it "letters_number should be a default" do
+      expect(config.letters_number).to eq(("0".."9").to_a)
     end
   end
 end
