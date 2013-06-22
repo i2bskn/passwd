@@ -16,9 +16,9 @@ RSpec.configure do |config|
       lower: true,
       upper: true,
       number: true,
-      letters_lower: ('a'..'z').to_a,
-      letters_upper: ('A'..'Z').to_a,
-      letters_number: ('0'..'9').to_a
+      letters_lower: ("a".."z").to_a,
+      letters_upper: ("A".."Z").to_a,
+      letters_number: ("0".."9").to_a
     }
   end
 end

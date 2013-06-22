@@ -7,7 +7,7 @@ require "passwd/password"
 require "passwd/active_record"
 
 module Passwd
-  @@config = {
+  @config = {
     length: 8,
     lower: true,
     upper: true,
@@ -19,7 +19,7 @@ module Passwd
 
   class << self
     def create(options={})
-      config = @@config.merge(config_validator(options))
+      config = Passwd.config.merge(config_validator(options))
       letters = get_retters(config)
       Array.new(config[:length]){letters[rand(letters.size)]}.join
     end
@@ -34,7 +34,7 @@ module Passwd
     end
 
     def config(options={})
-      @@config.merge!(config_validator(options))
+      @config.merge!(config_validator(options))
     end
 
     private

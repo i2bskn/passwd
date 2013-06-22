@@ -45,7 +45,7 @@ password_hash = Passwd.hashing(password)
 
 ### Password settings
 
-Default config is stored in the class variable. (@@config)
+Default config is stored in the class instance variable.
 Changing the default configs are as follows:
 
 ```ruby
