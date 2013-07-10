@@ -5,8 +5,8 @@ module Passwd
     attr_reader :text, :hash, :salt_text, :salt_hash
 
     def initialize(options={})
-      @text = options[:password] || Passwd.create
-      @salt_text = options[:salt_text] || Time.now.to_s
+      @text = options.fetch(:password, Passwd.create)
+      @salt_text = options.fetch(:salt_text, Time.now.to_s)
       @salt_hash = Passwd.hashing(@salt_text)
       @hash = Passwd.hashing("#{@salt_hash}#{@text}")
     end

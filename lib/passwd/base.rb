@@ -13,11 +13,6 @@ module Passwd
       else
         config = TmpConfig.new(@config, options)
       end
-
-      generate(config)
-    end
-
-    def generate(config)
       Array.new(config.length){config.letters[rand(config.letters.size)]}.join
     end
 

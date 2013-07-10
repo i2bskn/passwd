@@ -4,9 +4,9 @@ module Passwd
   module ActiveRecord
     module ClassMethods
       def define_column(options={})
-        id_name = options[:id] || :email
-        salt_name = options[:salt] || :salt
-        password_name = options[:password] || :password
+        id_name = options.fetch(:id, :email)
+        salt_name = options.fetch(:salt, :salt)
+        password_name = options.fetch(:password, :password)
 
         define_singleton_auth(id_name, salt_name, password_name)
         define_instance_auth(id_name, salt_name, password_name)
