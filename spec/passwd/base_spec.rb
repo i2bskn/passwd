@@ -104,7 +104,7 @@ describe Passwd do
     end
 
     describe "#reset_config" do
-      let(:config) {Passwd.config}
+      let(:config) {Passwd::Config.instance}
       
       before {
         config.configure do |c|
@@ -116,7 +116,7 @@ describe Passwd do
           c.letters_upper = ["A"]
           c.letters_number = ["0"]
         end
-        config.reset
+        Passwd.reset_config
       }
 
       it "length should be a default" do
