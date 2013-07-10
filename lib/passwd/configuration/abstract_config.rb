@@ -1,7 +1,7 @@
 # coding: utf-8
 
 module Passwd
-  class Configuration
+  class AbstractConfig
     VALID_OPTIONS_KEYS = [
       :length,
       :lower,
@@ -13,10 +13,6 @@ module Passwd
     ].freeze
 
     attr_accessor *VALID_OPTIONS_KEYS
-
-    def initialize
-      reset
-    end
 
     def configure
       yield self
@@ -35,16 +31,6 @@ module Passwd
       chars.concat(self.letters_number) if self.number
       raise "letters is empty" if chars.empty?
       chars
-    end
-
-    def reset
-      self.length = 8
-      self.lower = true
-      self.upper = true
-      self.number = true
-      self.letters_lower = ("a".."z").to_a
-      self.letters_upper = ("A".."Z").to_a
-      self.letters_number = ("0".."9").to_a
     end
   end
 end

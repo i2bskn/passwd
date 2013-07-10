@@ -1,14 +1,23 @@
 # coding: utf-8
 
-require "passwd/configuration"
+require "passwd/configuration/config"
+require "passwd/configuration/tmp_config"
 
 module Passwd
-  @config = Configuration.new
+  @config = Config.instance
 
   module Base
     def create(options={})
-      config = @config.dup
-      config.merge options
+      if options.empty?
+        config = @config
+      else
+        config = TmpConfig.new(@config, options)
+      end
+
+      generate(config)
+    end
+
+    def generate(config)
       Array.new(config.length){config.letters[rand(config.letters.size)]}.join
     end
 
