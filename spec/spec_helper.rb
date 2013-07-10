@@ -12,4 +12,7 @@ require "passwd"
 
 RSpec.configure do |config|
   config.order = "random"
+  config.after do
+    Passwd::Config.instance.reset
+  end
 end

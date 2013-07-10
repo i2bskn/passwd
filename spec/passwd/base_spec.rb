@@ -4,42 +4,46 @@ require "spec_helper"
 
 describe Passwd do
   describe "extended Base" do
-    let(:default) do
-      {
-        length: 8,
-        lower: true,
-        upper: true,
-        number: true,
-        letters_lower: ("a".."z").to_a,
-        letters_upper: ("A".."Z").to_a,
-        letters_number: ("0".."9").to_a
-      }
-    end
-
     describe "#create" do
-      it "create random password" do
-        password = Passwd.create
-        expect(password.is_a? String).to be_true
-        expect(password.size).to eq(default[:length])
+      context "without arguments" do
+        let(:password) {Passwd.create}
+
+        it "TmpConfig should not be generated" do
+          Passwd::TmpConfig.should_not_receive(:new)
+          expect{password}.not_to raise_error
+        end
+
+        it "created password should be String object" do
+          expect(password.is_a? String).to be_true
+        end
+
+        it "created password length should be default length" do
+          expect(password.size).to eq(8)
+        end
       end
 
-      it "password was created specified characters" do
-        expect(Passwd.create(length: 10).size).to eq(10)
-      end
+      context "with arguments" do
+        it "TmpConfig should be generated" do
+          tmp_config = double("tmp_config mock", length: 8, letters: ["a", "b"])
+          Passwd::TmpConfig.should_receive(:new).and_return(tmp_config)
+          expect{Passwd.create(length: 10)}.not_to raise_error
+        end
 
-      it "password create without lower case" do
-        password = Passwd.create lower: false
-        expect(default[:letters_lower].include? password).to be_false
-      end
+        it "password was created specified characters" do
+          expect(Passwd.create(length: 10).size).to eq(10)
+        end
 
-      it "password create without upper case" do
-        password = Passwd.create upper: false
-        expect(default[:letters_upper].include? password).to be_false
-      end
+        it "password create without lower case" do
+          expect(("a".."z").to_a.include? Passwd.create(lower: false)).to be_false
+        end
 
-      it "password create without number" do
-        password = Passwd.create(number: false)
-        expect(default[:letters_number].include? password).to be_false
+        it "password create without upper case" do
+          expect(("A".."Z").to_a.include? Passwd.create(upper: false)).to be_false
+        end
+
+        it "password create without number" do
+          expect(("0".."9").to_a.include? Passwd.create(number: false)).to be_false
+        end
       end
     end
 
@@ -76,8 +80,6 @@ describe Passwd do
     end
 
     describe "#configure" do
-      after {Passwd.reset_config}
-
       it "return configuration object" do
         expect(Passwd.configure.is_a? Passwd::Config).to be_true
       end
@@ -86,13 +88,13 @@ describe Passwd do
         Passwd.configure do |c|
           c.length = 10
         end
-        expect(Passwd.configure.length).not_to eq(default[:length])
+        expect(Passwd.configure.length).not_to eq(8)
         expect(Passwd.configure.length).to eq(10)
       end
 
       it "set config value from hash" do
         Passwd.configure length: 20
-        expect(Passwd.config.length).not_to eq(default[:length])
+        expect(Passwd.config.length).not_to eq(8)
         expect(Passwd.config.length).to eq(20)
       end
 

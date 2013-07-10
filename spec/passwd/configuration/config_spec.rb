@@ -4,7 +4,6 @@ require "spec_helper"
 
 describe Passwd::Config do
   let(:config) {Passwd::Config.instance}
-  before {config.reset}
 
   describe "defined accessors" do
     it "defined length" do
