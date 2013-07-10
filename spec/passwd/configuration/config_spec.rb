@@ -2,8 +2,8 @@
 
 require "spec_helper"
 
-describe Passwd::Configuration do
-  let(:config) {Passwd::Configuration.new}
+describe Passwd::Config do
+  let(:config) {Passwd::Config.instance}
 
   describe "defined accessors" do
     it "defined length" do
