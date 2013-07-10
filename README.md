@@ -49,7 +49,7 @@ Default config is stored in the class instance variable.
 Changing the default configs are as follows:
 
 ```ruby
-Passwd.config => Get config hash.
+Passwd.config => Get config object.
 Passwd.config(length: 10) => Change to the default length.
 
 Passwd.configure do |c|
