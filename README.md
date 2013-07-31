@@ -98,7 +98,10 @@ password == "invalid!!" # => false
 
 ## For ActiveRecord User model
 
-model:
+#### User model
+
+Include `Passwd::ActiveRecord` module and define id/salt/password column from `define_column` method.  
+`id` column is required uniqueness.
 
 ```ruby
 class User < ActiveRecord::Base
@@ -110,7 +113,13 @@ class User < ActiveRecord::Base
 end
 ```
 
-Authentication:
+Available following method by defining id/salt/password column.
+
+#### Authentication
+
+`authenticate` method is available in both instance and class.  
+Return the user object if the authentication successful.  
+Return the nil if authentication fails or doesn't exists user.
 
 ```ruby
 user = User.authenticate("foo@example.com", "secret") # => return user object or nil.
@@ -122,6 +131,8 @@ else
 end
 ```
 
+instance method is not required `id`.
+
 ```ruby
 user = User.find(params[:id])
 if user.authenticate("secret") # => return true or false
@@ -131,20 +142,24 @@ else
 end
 ```
 
-Change passowrd:
+#### Change passowrd
+
+`set_password` method will be set random password.  
+Return value is plain text password.  
+To specify the password as an argument if you want to specify a password.  
+`salt` also set if salt is nil.
 
 ```ruby
 user = User.find(params[:id])
-# set random password. (salt also set if salt is nil)
-# return set password text.
-# set specified password if specified argument.
-#   user.set_password("secret")
 password_text = user.set_password
 
 if user.save
   NoticeMailer.change_mail(user, password_text).deliver
 end
 ```
+`update_password` method will be set new password if the authentication successful.  
+Return the nil if authentication fails.  
+But `update_password` method doesn't call `save` method.
 
 ```ruby
 user.find(params[:id])
