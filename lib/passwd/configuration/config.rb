@@ -1,7 +1,5 @@
 # coding: utf-8
 
-require "singleton"
-
 require "passwd/configuration/abstract_config"
 
 module Passwd

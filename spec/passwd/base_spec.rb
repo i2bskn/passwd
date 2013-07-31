@@ -103,6 +103,57 @@ describe Passwd do
       end
     end
 
+    describe "#policy_configure" do
+      it "return policy object" do
+        expect(Passwd.policy_configure.is_a? Passwd::Policy).to be_true
+      end
+
+      it "set policy value from block" do
+        Passwd.policy_configure do |c|
+          c.min_length = 10
+        end
+        expect(Passwd.policy_configure.min_length).not_to eq(8)
+        expect(Passwd.policy_configure.min_length).to eq(10)
+      end
+    end
+
+    describe "#policy_check" do
+      it "Policy#valid? should be called" do
+        Passwd::Policy.instance.should_receive(:valid?).with("secret1234" ,Passwd::Config.instance)
+        expect(Passwd.policy_check("secret1234")).not_to raise_error
+      end
+    end
+
+    describe "#reset_policy" do
+      let(:policy) {Passwd::Policy.instance}
+      
+      before {
+        policy.configure do |c|
+          c.min_length = 20
+          c.require_lower = false
+          c.require_upper = true
+          c.require_number = false
+        end
+        Passwd.reset_policy
+      }
+
+      it "min_length should be a default" do
+        expect(policy.min_length).to eq(8)
+      end
+
+      it "require_lower should be a default" do
+        expect(policy.require_lower).to be_true
+      end
+
+      it "upper should be a default" do
+        expect(policy.require_upper).to be_false
+      end
+
+      it "number should be a default" do
+        expect(policy.require_number).to be_true
+      end
+    end
+
     describe "#reset_config" do
       let(:config) {Passwd::Config.instance}
       

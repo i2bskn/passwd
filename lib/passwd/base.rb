@@ -1,10 +1,13 @@
 # coding: utf-8
 
+require "singleton"
 require "passwd/configuration/config"
 require "passwd/configuration/tmp_config"
+require "passwd/configuration/policy"
 
 module Passwd
   @config = Config.instance
+  @policy = Policy.instance
 
   module Base
     def create(options={})
@@ -38,8 +41,24 @@ module Passwd
     end
     alias :config :configure
 
+    def policy_configure(&block)
+      if block_given?
+        @policy.configure &block
+      else
+        @policy
+      end
+    end
+
+    def policy_check(password)
+      @policy.valid?(password, @config)
+    end
+
     def reset_config
       @config.reset
+    end
+
+    def reset_policy
+      @policy.reset
     end
   end
 

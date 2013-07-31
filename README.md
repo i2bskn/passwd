@@ -49,8 +49,8 @@ Default config is stored in the class instance variable.
 Changing the default configs are as follows:
 
 ```ruby
-Passwd.config => Get config object.
-Passwd.config(length: 10) => Change to the default length.
+Passwd.config # => Get config object.
+Passwd.config(length: 10) # => Change to the default length.
 
 Passwd.configure do |c|
   c.length = 10
@@ -66,6 +66,29 @@ Options that can be specified:
 * :letters_lower => Define an array of lower case. default is ("a".."z").to_a
 * :letters_upper => Define an array of upper case. default is ("A".."Z").to_a
 * :letters_number => Define an array of numbers. default is ("0".."9").to_a
+
+### Policy
+
+Default policy is 8 more characters and require lower case and require number.
+
+```ruby
+Passwd.policy_check("secret") # => true or false
+```
+
+### Policy settings
+
+```ruby
+Passwd.policy_configure do |c|
+  c.min_length = 10
+end
+```
+
+Options that can be specified:
+
+* :min_length => Number of minimum characters. default is 8.
+* :require_lower => Require lower case if set true. default is true.
+* :require_upper => Require upper case if set true. default is false.
+* :require_number => Require number if set true. default is true.
 
 ### Password object
 
@@ -96,9 +119,9 @@ password == password.text # => true
 password == "invalid!!" # => false
 ```
 
-## For ActiveRecord User model
+## For ActiveRecord
 
-#### User model
+### User model
 
 Include `Passwd::ActiveRecord` module and define id/salt/password column from `define_column` method.  
 `id` column is required uniqueness.
@@ -115,7 +138,7 @@ end
 
 Available following method by defining id/salt/password column.
 
-#### Authentication
+### Authentication
 
 `authenticate` method is available in both instance and class.  
 Return the user object if the authentication successful.  
@@ -142,7 +165,7 @@ else
 end
 ```
 
-#### Change passowrd
+### Change passowrd
 
 `set_password` method will be set random password.  
 Return value is plain text password.  
