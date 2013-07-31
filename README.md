@@ -67,7 +67,7 @@ Options that can be specified:
 * :letters_upper => Define an array of upper case. default is ("A".."Z").to_a
 * :letters_number => Define an array of numbers. default is ("0".."9").to_a
 
-### Policy
+### Policy check
 
 Default policy is 8 more characters and require lower case and require number.
 
