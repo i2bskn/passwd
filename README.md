@@ -185,13 +185,16 @@ Return the nil if authentication fails.
 But `update_password` method doesn't call `save` method.
 
 ```ruby
-user.find(params[:id])
-if user.update_password(old_pass, new_pass) # => return new password(text) or false
-  if user.save
+@user = User.find(params[:id])
+
+if Passwd.confirm_check(params[:new_pass], params[:new_pass_confirm])
+  if @user.update_password(old_pass, new_pass) && @user.save # => return new password(text) or false
     NoticeMailer.change_mail(user, password_text).deliver
+  else
+    puts "Authentication failed!"
   end
 else
-  puts "Authentication failed!"
+  puts "Password don't match!"
 end
 ```
 
