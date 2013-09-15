@@ -28,6 +28,12 @@ module Passwd
       Digest::SHA1.hexdigest plain
     end
 
+    def confirm_check(password, confirm, with_policy=false)
+      return false if password != confirm
+      return true unless with_policy
+      Passwd.policy_check(password)
+    end
+
     def configure(options={}, &block)
       if block_given?
         @config.configure &block

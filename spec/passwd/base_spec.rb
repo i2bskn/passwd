@@ -79,6 +79,28 @@ describe Passwd do
       end
     end
 
+    describe "#confirm_check" do
+      context "with out policy check" do
+        it "return false if password don't match" do
+          expect(Passwd.confirm_check("secret", "invalid")).to be_false
+        end
+
+        it "return true if password matches" do
+          expect(Passwd.confirm_check("secret", "secret")).to be_true
+        end
+      end
+
+      context "with policy check" do
+        it "return false if invalid password by policy" do
+          expect(Passwd.confirm_check("secret", "secret", true)).to be_false
+        end
+
+        it "return true if valid password by policy" do
+          expect(Passwd.confirm_check("secretpass", "secretpass", true)).to be_false
+        end
+      end
+    end
+
     describe "#configure" do
       it "return configuration object" do
         expect(Passwd.configure.is_a? Passwd::Config).to be_true
