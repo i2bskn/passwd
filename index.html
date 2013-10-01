@@ -33,7 +33,7 @@
 
 <p>Add this line to your application's Gemfile:</p>
 
-<div class="highlight"><pre><span class="n">gem</span> <span class="s1">'passwd'</span>
+<div class="highlight highlight-ruby"><pre><span class="n">gem</span> <span class="s1">'passwd'</span>
 </pre></div>
 
 <p>And then execute:</p>
@@ -49,13 +49,13 @@
 <h2>
 <a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
 
-<div class="highlight"><pre><span class="nb">require</span> <span class="s1">'passwd'</span>
+<div class="highlight highlight-ruby"><pre><span class="nb">require</span> <span class="s1">'passwd'</span>
 </pre></div>
 
 <h3>
 <a name="create-random-password" class="anchor" href="#create-random-password"><span class="octicon octicon-link"></span></a>Create random password</h3>
 
-<div class="highlight"><pre><span class="n">password</span> <span class="o">=</span> <span class="no">Passwd</span><span class="o">.</span><span class="n">create</span>
+<div class="highlight highlight-ruby"><pre><span class="n">password</span> <span class="o">=</span> <span class="no">Passwd</span><span class="o">.</span><span class="n">create</span>
 </pre></div>
 
 <h3>
@@ -63,17 +63,21 @@
 
 <p>Hashing with SHA1.</p>
 
-<div class="highlight"><pre><span class="n">password_hash</span> <span class="o">=</span> <span class="no">Passwd</span><span class="o">.</span><span class="n">hashing</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
+<div class="highlight highlight-ruby"><pre><span class="n">password_hash</span> <span class="o">=</span> <span class="no">Passwd</span><span class="o">.</span><span class="n">hashing</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
 </pre></div>
 
 <h3>
 <a name="password-settings" class="anchor" href="#password-settings"><span class="octicon octicon-link"></span></a>Password settings</h3>
 
-<p>Default config is stored in the class variable. (@<a href="https://github.com/config" class="user-mention">@config</a>)
+<p>Default config is stored in the class instance variable.
 Changing the default configs are as follows:</p>
 
-<div class="highlight"><pre><span class="no">Passwd</span><span class="o">.</span><span class="n">config</span> <span class="o">=&gt;</span> <span class="no">Get</span> <span class="n">config</span> <span class="nb">hash</span><span class="o">.</span>
-<span class="no">Passwd</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="ss">length</span><span class="p">:</span> <span class="mi">10</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="no">Change</span> <span class="n">to</span> <span class="n">the</span> <span class="n">default</span> <span class="n">length</span><span class="o">.</span>
+<div class="highlight highlight-ruby"><pre><span class="no">Passwd</span><span class="o">.</span><span class="n">config</span> <span class="c1"># =&gt; Get config object.</span>
+<span class="no">Passwd</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="ss">length</span><span class="p">:</span> <span class="mi">10</span><span class="p">)</span> <span class="c1"># =&gt; Change to the default length.</span>
+
+<span class="no">Passwd</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">c</span><span class="o">|</span>
+  <span class="n">c</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="k">end</span>
 </pre></div>
 
 <p>Options that can be specified:</p>
@@ -87,12 +91,35 @@ Changing the default configs are as follows:</p>
 <li>:letters_upper =&gt; Define an array of upper case. default is ("A".."Z").to_a</li>
 <li>:letters_number =&gt; Define an array of numbers. default is ("0".."9").to_a</li>
 </ul><h3>
+<a name="policy-check" class="anchor" href="#policy-check"><span class="octicon octicon-link"></span></a>Policy check</h3>
+
+<p>Default policy is 8 more characters and require lower case and require number.</p>
+
+<div class="highlight highlight-ruby"><pre><span class="no">Passwd</span><span class="o">.</span><span class="n">policy_check</span><span class="p">(</span><span class="s2">"secret"</span><span class="p">)</span> <span class="c1"># =&gt; true or false</span>
+</pre></div>
+
+<h3>
+<a name="policy-settings" class="anchor" href="#policy-settings"><span class="octicon octicon-link"></span></a>Policy settings</h3>
+
+<div class="highlight highlight-ruby"><pre><span class="no">Passwd</span><span class="o">.</span><span class="n">policy_configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">c</span><span class="o">|</span>
+  <span class="n">c</span><span class="o">.</span><span class="n">min_length</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="k">end</span>
+</pre></div>
+
+<p>Options that can be specified:</p>
+
+<ul>
+<li>:min_length =&gt; Number of minimum characters. default is 8.</li>
+<li>:require_lower =&gt; Require lower case if set true. default is true.</li>
+<li>:require_upper =&gt; Require upper case if set true. default is false.</li>
+<li>:require_number =&gt; Require number if set true. default is true.</li>
+</ul><h3>
 <a name="password-object" class="anchor" href="#password-object"><span class="octicon octicon-link"></span></a>Password object</h3>
 
 <p>Default password is randomly generated.
 Default salt is "#{Time.now.to_s}".</p>
 
-<div class="highlight"><pre><span class="n">password</span> <span class="o">=</span> <span class="ss">Passwd</span><span class="p">:</span><span class="ss">:Password</span><span class="o">.</span><span class="n">new</span>
+<div class="highlight highlight-ruby"><pre><span class="n">password</span> <span class="o">=</span> <span class="ss">Passwd</span><span class="p">:</span><span class="ss">:Password</span><span class="o">.</span><span class="n">new</span>
 <span class="n">password</span><span class="o">.</span><span class="n">text</span> <span class="c1"># return text password.</span>
 <span class="n">password</span><span class="o">.</span><span class="n">salt_text</span> <span class="c1"># return text salt.</span>
 <span class="n">password</span><span class="o">.</span><span class="n">salt_hash</span> <span class="c1"># return hash salt.</span>
@@ -106,7 +133,7 @@ Default salt is "#{Time.now.to_s}".</p>
 <li>:salt_text =&gt; Text salt. default is #{Time.now.to_s}.</li>
 </ul><p>Password authenticate:</p>
 
-<div class="highlight"><pre><span class="n">password</span> <span class="o">=</span> <span class="ss">Passwd</span><span class="p">:</span><span class="ss">:Password</span><span class="o">.</span><span class="n">new</span>
+<div class="highlight highlight-ruby"><pre><span class="n">password</span> <span class="o">=</span> <span class="ss">Passwd</span><span class="p">:</span><span class="ss">:Password</span><span class="o">.</span><span class="n">new</span>
 <span class="no">Passwd</span><span class="o">.</span><span class="n">auth</span><span class="p">(</span><span class="n">password</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">password</span><span class="o">.</span><span class="n">salt_hash</span><span class="p">,</span> <span class="n">password</span><span class="o">.</span><span class="n">hash</span><span class="p">)</span> <span class="c1"># =&gt; true</span>
 <span class="no">Passwd</span><span class="o">.</span><span class="n">auth</span><span class="p">(</span><span class="s2">"invalid!!"</span><span class="p">,</span> <span class="n">password</span><span class="o">.</span><span class="n">salt_hash</span><span class="p">,</span> <span class="n">password</span><span class="o">.</span><span class="n">hash</span><span class="p">)</span> <span class="c1"># =&gt; false</span>
 
@@ -115,11 +142,14 @@ Default salt is "#{Time.now.to_s}".</p>
 </pre></div>
 
 <h2>
-<a name="for-activerecord-user-model" class="anchor" href="#for-activerecord-user-model"><span class="octicon octicon-link"></span></a>For ActiveRecord User model</h2>
+<a name="for-activerecord" class="anchor" href="#for-activerecord"><span class="octicon octicon-link"></span></a>For ActiveRecord</h2>
 
-<p>model:</p>
+<h3>
+<a name="user-model" class="anchor" href="#user-model"><span class="octicon octicon-link"></span></a>User model</h3>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
+<p>Include <code>Passwd::ActiveRecord</code> module and define id/salt/password column from <code>define_column</code> method.<br><code>id</code> column is required uniqueness.</p>
+
+<div class="highlight highlight-ruby"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord</span><span class="p">:</span><span class="ss">:Base</span>
   <span class="kp">include</span> <span class="ss">Passwd</span><span class="p">:</span><span class="ss">:ActiveRecord</span>
   <span class="c1"># if not specified arguments for define_column =&gt; {id: :email, salt: :salt, password: :password}</span>
   <span class="n">define_column</span> <span class="nb">id</span><span class="p">:</span> <span class="ss">:id_colname</span><span class="p">,</span> <span class="ss">salt</span><span class="p">:</span> <span class="ss">:salt_colname</span><span class="p">,</span> <span class="ss">password</span><span class="p">:</span> <span class="ss">:password_colname</span>
@@ -128,9 +158,16 @@ Default salt is "#{Time.now.to_s}".</p>
 <span class="k">end</span>
 </pre></div>
 
-<p>Authentication:</p>
+<p>Available following method by defining id/salt/password column.</p>
 
-<div class="highlight"><pre><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="s2">"foo@example.com"</span><span class="p">,</span> <span class="s2">"secret"</span><span class="p">)</span> <span class="c1"># =&gt; return user object or nil.</span>
+<h3>
+<a name="authentication" class="anchor" href="#authentication"><span class="octicon octicon-link"></span></a>Authentication</h3>
+
+<p><code>authenticate</code> method is available in both instance and class.<br>
+Return the user object if the authentication successful.<br>
+Return the nil if authentication fails or doesn't exists user.</p>
+
+<div class="highlight highlight-ruby"><pre><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="s2">"foo@example.com"</span><span class="p">,</span> <span class="s2">"secret"</span><span class="p">)</span> <span class="c1"># =&gt; return user object or nil.</span>
 
 <span class="k">if</span> <span class="n">user</span>
   <span class="nb">puts</span> <span class="s2">"Hello </span><span class="si">#{</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">!"</span>
@@ -139,7 +176,9 @@ Default salt is "#{Time.now.to_s}".</p>
 <span class="k">end</span>
 </pre></div>
 
-<div class="highlight"><pre><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
+<p>instance method is not required <code>id</code>.</p>
+
+<div class="highlight highlight-ruby"><pre><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
 <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="s2">"secret"</span><span class="p">)</span> <span class="c1"># =&gt; return true or false</span>
   <span class="nb">puts</span> <span class="s2">"Authentication is successful!"</span>
 <span class="k">else</span>
@@ -147,13 +186,14 @@ Default salt is "#{Time.now.to_s}".</p>
 <span class="k">end</span>
 </pre></div>
 
-<p>Change passowrd:</p>
+<h3>
+<a name="change-passowrd" class="anchor" href="#change-passowrd"><span class="octicon octicon-link"></span></a>Change passowrd</h3>
 
-<div class="highlight"><pre><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
-<span class="c1"># set random password. (salt also set if salt is nil)</span>
-<span class="c1"># return set password text.</span>
-<span class="c1"># set specified password if specified argument.</span>
-<span class="c1">#   user.set_password("secret")</span>
+<p><code>set_password</code> method will be set random password.<br>
+Return value is plain text password.<br>
+To specify the password as an argument if you want to specify a password.<br><code>salt</code> also set if salt is nil.</p>
+
+<div class="highlight highlight-ruby"><pre><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
 <span class="n">password_text</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">set_password</span>
 
 <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">save</span>
@@ -161,15 +201,33 @@ Default salt is "#{Time.now.to_s}".</p>
 <span class="k">end</span>
 </pre></div>
 
-<div class="highlight"><pre><span class="n">user</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">update_password</span><span class="p">(</span><span class="n">old_pass</span><span class="p">,</span> <span class="n">new_pass</span><span class="p">)</span> <span class="c1"># =&gt; return new password(text) or false</span>
-  <span class="k">if</span> <span class="n">user</span><span class="o">.</span><span class="n">save</span>
+<p><code>update_password</code> method will be set new password if the authentication successful.<br>
+Return the nil if authentication fails.<br>
+But <code>update_password</code> method doesn't call <code>save</code> method.</p>
+
+<div class="highlight highlight-ruby"><pre><span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="no">Passwd</span><span class="o">.</span><span class="n">confirm_check</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:new_pass</span><span class="o">]</span><span class="p">,</span> <span class="n">params</span><span class="o">[</span><span class="ss">:new_pass_confirm</span><span class="o">]</span><span class="p">)</span>
+  <span class="k">if</span> <span class="vi">@user</span><span class="o">.</span><span class="n">update_password</span><span class="p">(</span><span class="n">old_pass</span><span class="p">,</span> <span class="n">new_pass</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="vi">@user</span><span class="o">.</span><span class="n">save</span> <span class="c1"># =&gt; return new password(text) or false</span>
     <span class="no">NoticeMailer</span><span class="o">.</span><span class="n">change_mail</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">password_text</span><span class="p">)</span><span class="o">.</span><span class="n">deliver</span>
+  <span class="k">else</span>
+    <span class="nb">puts</span> <span class="s2">"Authentication failed!"</span>
   <span class="k">end</span>
 <span class="k">else</span>
-  <span class="nb">puts</span> <span class="s2">"Authentication failed!"</span>
+  <span class="nb">puts</span> <span class="s2">"Password don't match!"</span>
 <span class="k">end</span>
 </pre></div>
+
+<h2>
+<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
+
+<ol>
+<li>Fork it</li>
+<li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li>
+<li>Commit your changes (<code>git commit -am 'Added some feature'</code>)</li>
+<li>Push to the branch (<code>git push origin my-new-feature</code>)</li>
+<li>Create new Pull Request</li>
+</ol>
       </section>
     </div>
 
