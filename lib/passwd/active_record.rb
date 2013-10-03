@@ -39,11 +39,15 @@ module Passwd
       end
 
       def define_update_password(salt_name, password_name)
-        define_method :update_password do |old_pass, new_pass|
+        define_method :update_password do |old_pass, new_pass, policy_check=false|
           if Passwd.auth(old_pass, self.send(salt_name), self.send(password_name))
+            if policy_check
+              raise Passwd::PolicyNotMatch, "Policy not match" unless Passwd.policy_check(new_pass)
+            end
+
             set_password(new_pass)
           else
-            false
+            raise Passwd::AuthError
           end
         end
       end

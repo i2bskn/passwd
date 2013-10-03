@@ -12,14 +12,14 @@ describe Passwd::ActiveRecord do
   let(:password_text) {"secret"}
   let(:password_hash) {Digest::SHA1.hexdigest("#{salt}#{password_text}")}
 
-  describe ".included" do
+  describe ".#included" do
     it "define singleton methods" do
       expect(User.respond_to? :define_column).to be_true
     end
   end
 
   describe "extend methods" do
-    describe ".define_column" do
+    describe ".#define_column" do
       let(:user) {User.new}
 
       it "define singleton methods" do
@@ -41,7 +41,7 @@ describe Passwd::ActiveRecord do
   end
 
   describe "defined methods from define_column" do
-    describe ".authenticate" do
+    describe ".#authenticate" do
       let!(:record) {
         record = double("record mock")
         record.stub(:salt).and_return(salt)
@@ -126,16 +126,37 @@ describe Passwd::ActiveRecord do
         user
       }
 
-      it "should return update password" do
-        pass = "new_password"
-        user.should_receive(:set_password).with(pass).and_return(pass)
-        expect(user.update_password(password_text, pass)).to eq(pass)
+      context "without policy check" do
+        it "should return update password" do
+          pass = "new_password"
+          user.should_receive(:set_password).with(pass).and_return(pass)
+          expect(user.update_password(password_text, pass)).to eq(pass)
+        end
+
+        it "should generate exception if authentication failed" do
+          Passwd.should_receive(:auth).and_return(false)
+          user.should_not_receive(:set_password)
+          expect {
+            user.update_password("invalid_password", "new_password")
+          }.to raise_error(Passwd::AuthError)
+        end
       end
 
-      it "should return false if authentication failed" do
-        Passwd.should_receive(:auth).and_return(false)
-        user.should_not_receive(:set_password)
-        user.update_password("invalid_password", "new_password")
+      context "with policy check" do
+        it "should return update password" do
+          pass = "new_password"
+          Passwd.should_receive(:policy_check).and_return(true)
+          user.should_receive(:set_password).with(pass).and_return(pass)
+          expect(user.update_password(password_text, pass, true)).to eq(pass)
+        end
+
+        it "should generate exception if policy not match" do
+          pass = "new_password"
+          Passwd.should_receive(:policy_check).and_return(false)
+          expect {
+            user.update_password(password_text, pass, true)
+            }.to raise_error(Passwd::PolicyNotMatch)
+        end
       end
     end
   end
