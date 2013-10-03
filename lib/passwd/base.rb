@@ -29,7 +29,7 @@ module Passwd
     end
 
     def confirm_check(password, confirm, with_policy=false)
-      return false if password != confirm
+      raise PasswordNotMatch, "Password not match" if password != confirm
       return true unless with_policy
       Passwd.policy_check(password)
     end

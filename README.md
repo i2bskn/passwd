@@ -180,21 +180,31 @@ if user.save
   NoticeMailer.change_mail(user, password_text).deliver
 end
 ```
+
 `update_password` method will be set new password if the authentication successful.  
-Return the nil if authentication fails.  
 But `update_password` method doesn't call `save` method.
 
 ```ruby
 @user = User.find(params[:id])
 
-if Passwd.confirm_check(params[:new_pass], params[:new_pass_confirm])
-  if @user.update_password(old_pass, new_pass) && @user.save # => return new password(text) or false
-    NoticeMailer.change_mail(user, password_text).deliver
-  else
-    puts "Authentication failed!"
-  end
-else
-  puts "Password don't match!"
+begin
+  confirm_check(new_pass, confirm)
+  @user.update_password(old_pass, new_pass, true)
+  @user.save!
+  NoticeMailer.change_mail(@user).deliver
+  redirect_to bar_path, notice: "Password updated successfully"
+rescue PasswordNotMatch
+  flash.now[:alert] = "Password not match"
+  render action: :edit
+rescue AuthError
+  flash.now[:alert] = "Password is incorrect"
+  render action: :edit
+rescue PolicyNotMatch
+  flash.now[:alert] = "Policy not match"
+  render action: :edit
+rescue
+  flash.now[:alert] = "Password update failed"
+  render action: :edit
 end
 ```
 

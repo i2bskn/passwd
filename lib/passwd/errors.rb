@@ -7,6 +7,9 @@ module Passwd
   class AuthError < PasswdError
   end
 
+  class PasswordNotMatch < PasswdError
+  end
+
   class PolicyNotMatch < PasswdError
   end
 end
