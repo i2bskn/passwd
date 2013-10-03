@@ -81,8 +81,10 @@ describe Passwd do
 
     describe "#confirm_check" do
       context "with out policy check" do
-        it "return false if password don't match" do
-          expect(Passwd.confirm_check("secret", "invalid")).to be_false
+        it "should generate exception if password don't match" do
+          expect{
+            Passwd.confirm_check("secret", "invalid")
+            }.to raise_error(Passwd::PasswordNotMatch)
         end
 
         it "return true if password matches" do
