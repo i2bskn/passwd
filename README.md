@@ -191,7 +191,6 @@ begin
   confirm_check(new_pass, confirm)
   @user.update_password(old_pass, new_pass, true)
   @user.save!
-  NoticeMailer.change_mail(@user).deliver
   redirect_to bar_path, notice: "Password updated successfully"
 rescue PasswordNotMatch
   flash.now[:alert] = "Password not match"
