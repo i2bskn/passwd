@@ -145,23 +145,28 @@ Return the user object if the authentication successful.
 Return the nil if authentication fails or doesn't exists user.
 
 ```ruby
-user = User.authenticate("foo@example.com", "secret") # => return user object or nil.
+user = User.authenticate(params[:email], params[:password]) # => return user object or nil.
 
 if user
-  puts "Hello #{user.name}!"
+  session[:user] = user.id
+  redirect_to bar_path, notice: "Hello #{user.name}!"
 else
-  puts "Authentication failed"
+  flash.now[:alert] = "Authentication failed"
+  render action: :new
 end
 ```
 
 instance method is not required `id`.
 
 ```ruby
-user = User.find(params[:id])
-if user.authenticate("secret") # => return true or false
-  puts "Authentication is successful!"
+current_user = User.find(session[:user])
+
+if current_user.authenticate(params[:password]) # => return true or false
+  # some process
+  redirect_to bar_path, notice: "Some process is successfully"
 else
-  puts "Authentication failed!"
+  flash.now[:alert] = "Authentication failed"
+  render action: :edit
 end
 ```
 
@@ -173,11 +178,13 @@ To specify the password as an argument if you want to specify a password.
 `salt` also set if salt is nil.
 
 ```ruby
-user = User.find(params[:id])
-password_text = user.set_password
+current_user = User.find(session[:user])
+password_text = current_user.set_password
 
-if user.save
-  NoticeMailer.change_mail(user, password_text).deliver
+if current_user.save
+  redirect_to bar_path, notice: "Password update successfully"
+else
+  render action: :edit
 end
 ```
 
@@ -185,23 +192,28 @@ end
 But `update_password` method doesn't call `save` method.
 
 ```ruby
-@user = User.find(params[:id])
+current_user = User.find(session[:user])
 
 begin
-  confirm_check(new_pass, confirm)
-  @user.update_password(old_pass, new_pass, true)
-  @user.save!
+  Passwd.confirm_check(params[:password], params[:password_confirmation])
+  # update_password(OLD_PASSWORD, NEW_PASSWORD[, POLICY_CHECK=false])
+  current_user.update_password(old_pass, new_pass, true)
+  current_user.save!
   redirect_to bar_path, notice: "Password updated successfully"
-rescue PasswordNotMatch
+rescue Passwd::PasswordNotMatch
+  # PASSWORD != PASSWORD_CONFIRMATION from Passwd.#confirm_check
   flash.now[:alert] = "Password not match"
   render action: :edit
-rescue AuthError
+rescue Passwd::AuthError
+  # Authentication failed from #update_password
   flash.now[:alert] = "Password is incorrect"
   render action: :edit
-rescue PolicyNotMatch
+rescue Passwd::PolicyNotMatch
+  # Policy not match from #update_password
   flash.now[:alert] = "Policy not match"
   render action: :edit
 rescue
+  # Other errors
   flash.now[:alert] = "Password update failed"
   render action: :edit
 end
