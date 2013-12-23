@@ -3,6 +3,7 @@
 module Passwd
   class AbstractConfig
     VALID_OPTIONS_KEYS = [
+      :algorithm,
       :length,
       :lower,
       :upper,

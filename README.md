@@ -53,12 +53,14 @@ Passwd.config # => Get config object.
 Passwd.config(length: 10) # => Change to the default length.
 
 Passwd.configure do |c|
+  c.algorithm = :sha512
   c.length = 10
 end
 ```
 
 Options that can be specified:
 
+* :algorithm => Hashing algorithm. default is :sha512.
 * :length => Number of characters. default is 8.
 * :lower => Skip lower case if set false. default is true.
 * :upper => Skip upper case if set false. default is true.

@@ -10,6 +10,10 @@ describe Passwd::TmpConfig do
   end
 
   describe "defined accessors" do
+    it "defined algorithm" do
+      expect(config.respond_to? :algorithm).to be_true
+    end
+
     it "defined length" do
       expect(tmp_config.respond_to? :length).to be_true
     end
@@ -41,6 +45,10 @@ describe Passwd::TmpConfig do
 
   describe "#initialize" do
     context "with empty options" do
+      it "algorithm should be a default" do
+        expect(config.algorithm).to eq(:sha512)
+      end
+
       it "length should be a default" do
         expect(tmp_config.length).to eq(8)
       end

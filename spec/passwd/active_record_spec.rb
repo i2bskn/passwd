@@ -8,9 +8,9 @@ describe Passwd::ActiveRecord do
     define_column
   end
 
-  let(:salt) {Digest::SHA1.hexdigest("salt")}
+  let(:salt) {Digest::SHA512.hexdigest("salt")}
   let(:password_text) {"secret"}
-  let(:password_hash) {Digest::SHA1.hexdigest("#{salt}#{password_text}")}
+  let(:password_hash) {Digest::SHA512.hexdigest("#{salt}#{password_text}")}
 
   describe ".#included" do
     it "define singleton methods" do

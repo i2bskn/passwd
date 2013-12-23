@@ -11,6 +11,7 @@ module Passwd
     end
 
     def reset
+      self.algorithm = :sha512
       self.length = 8
       self.lower = true
       self.upper = true

@@ -24,8 +24,12 @@ module Passwd
       password_hash == enc_pass
     end
 
-    def hashing(plain)
-      Digest::SHA1.hexdigest plain
+    def hashing(plain, algorithm=nil)
+      if algorithm.nil?
+        eval "Digest::#{@config.algorithm.to_s.upcase}.hexdigest \"#{plain}\""
+      else
+        eval "Digest::#{algorithm.to_s.upcase}.hexdigest \"#{plain}\""
+      end
     end
 
     def confirm_check(password, confirm, with_policy=false)

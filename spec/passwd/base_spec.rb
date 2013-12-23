@@ -69,9 +69,19 @@ describe Passwd do
     end
 
     describe "#hashing" do
+      it "should call SHA512.#hexdigest" do
+        Digest::SHA512.should_receive(:hexdigest)
+        Passwd.hashing("secret")
+      end
+
       it "return hashed password" do
-        Digest::SHA1.should_receive(:hexdigest).with("secret").and_return("hash")
-        expect(Passwd.hashing("secret")).to eq("hash")
+        hashed = Digest::SHA512.hexdigest "secret"
+        expect(Passwd.hashing("secret")).to eq(hashed)
+      end
+
+      it "return hashed password specified algorithm" do
+        hashed = Digest::SHA256.hexdigest "secret"
+        expect(Passwd.hashing("secret", :sha256)).to eq(hashed)
       end
 
       it "should create exception if not specified argument" do
