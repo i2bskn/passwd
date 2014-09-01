@@ -1,5 +1,3 @@
-# coding: utf-8
-
 module Passwd
   module ActiveRecord
     module ClassMethods
@@ -60,3 +58,4 @@ module Passwd
     end
   end
 end
+

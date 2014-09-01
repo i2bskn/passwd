@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require "spec_helper"
 
 describe Passwd::Password do
@@ -148,3 +146,4 @@ describe Passwd::Password do
     end
   end
 end
+

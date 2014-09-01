@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require "singleton"
 require "passwd/configuration/config"
 require "passwd/configuration/tmp_config"
@@ -74,3 +72,4 @@ module Passwd
 
   extend Base
 end
+

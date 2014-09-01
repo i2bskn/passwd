@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require "spec_helper"
 
 describe Passwd::Policy do
@@ -131,3 +129,4 @@ describe Passwd::Policy do
     end
   end
 end
+

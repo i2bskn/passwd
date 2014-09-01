@@ -1,5 +1,3 @@
-# coding: utf-8
-
 module Passwd
   class Password
     attr_reader :text, :hash, :salt_text, :salt_hash
@@ -39,3 +37,4 @@ module Passwd
     end
   end
 end
+

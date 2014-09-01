@@ -21,3 +21,4 @@ RSpec.configure do |config|
     Passwd::Policy.instance.reset
   end
 end
+

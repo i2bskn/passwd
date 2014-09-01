@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require "spec_helper"
 
 describe Passwd do
@@ -234,3 +232,4 @@ describe Passwd do
     end
   end
 end
+

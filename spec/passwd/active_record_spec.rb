@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require "spec_helper"
 
 describe Passwd::ActiveRecord do
@@ -161,3 +159,4 @@ describe Passwd::ActiveRecord do
     end
   end
 end
+

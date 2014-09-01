@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require "passwd/configuration/abstract_config"
 
 module Passwd
@@ -16,3 +14,4 @@ module Passwd
     end
   end
 end
+

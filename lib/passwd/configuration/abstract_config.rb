@@ -1,5 +1,3 @@
-# coding: utf-8
-
 module Passwd
   class AbstractConfig
     VALID_OPTIONS_KEYS = [
@@ -35,3 +33,4 @@ module Passwd
     end
   end
 end
+

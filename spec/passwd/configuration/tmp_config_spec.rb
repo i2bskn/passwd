@@ -1,5 +1,3 @@
-# coding: utf-8
-
 require "spec_helper"
 
 describe Passwd::TmpConfig do
@@ -263,3 +261,4 @@ describe Passwd::TmpConfig do
     end
   end
 end
+

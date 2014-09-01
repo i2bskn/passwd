@@ -1,5 +1,3 @@
-# coding: utf-8
-
 module Passwd
   class PasswdError < StandardError
   end
@@ -13,3 +11,4 @@ module Passwd
   class PolicyNotMatch < PasswdError
   end
 end
+

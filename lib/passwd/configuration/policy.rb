@@ -1,5 +1,3 @@
-# coding: utf-8
-
 module Passwd
   class Policy
     include Singleton
@@ -44,3 +42,4 @@ module Passwd
     end
   end
 end
+
