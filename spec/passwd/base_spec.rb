@@ -7,12 +7,12 @@ describe Passwd do
         let(:password) {Passwd.create}
 
         it "TmpConfig should not be generated" do
-          Passwd::TmpConfig.should_not_receive(:new)
+          expect(Passwd::TmpConfig).not_to receive(:new)
           expect{password}.not_to raise_error
         end
 
         it "created password should be String object" do
-          expect(password.is_a? String).to be_true
+          expect(password.is_a? String).to be_truthy
         end
 
         it "created password length should be default length" do
@@ -23,7 +23,7 @@ describe Passwd do
       context "with arguments" do
         it "TmpConfig should be generated" do
           tmp_config = double("tmp_config mock", length: 8, letters: ["a", "b"])
-          Passwd::TmpConfig.should_receive(:new).and_return(tmp_config)
+          expect(Passwd::TmpConfig).to receive(:new) {tmp_config}
           expect{Passwd.create(length: 10)}.not_to raise_error
         end
 
@@ -32,15 +32,15 @@ describe Passwd do
         end
 
         it "password create without lower case" do
-          expect(("a".."z").to_a.include? Passwd.create(lower: false)).to be_false
+          expect(("a".."z").to_a.include? Passwd.create(lower: false)).to be_falsey
         end
 
         it "password create without upper case" do
-          expect(("A".."Z").to_a.include? Passwd.create(upper: false)).to be_false
+          expect(("A".."Z").to_a.include? Passwd.create(upper: false)).to be_falsey
         end
 
         it "password create without number" do
-          expect(("0".."9").to_a.include? Passwd.create(number: false)).to be_false
+          expect(("0".."9").to_a.include? Passwd.create(number: false)).to be_falsey
         end
       end
     end
@@ -54,11 +54,11 @@ describe Passwd do
       end
 
       it "return true with valid password" do
-        expect(Passwd.auth(password[:text], password[:salt], password[:hash])).to be_true
+        expect(Passwd.auth(password[:text], password[:salt], password[:hash])).to be_truthy
       end
 
       it "return false with invalid password" do
-        expect(Passwd.auth("invalid", password[:salt], password[:hash])).to be_false
+        expect(Passwd.auth("invalid", password[:salt], password[:hash])).to be_falsey
       end
 
       it "should create exception if not specified arguments" do
@@ -68,7 +68,7 @@ describe Passwd do
 
     describe "#hashing" do
       it "should call SHA512.#hexdigest" do
-        Digest::SHA512.should_receive(:hexdigest)
+        expect(Digest::SHA512).to receive(:hexdigest)
         Passwd.hashing("secret")
       end
 
@@ -96,24 +96,24 @@ describe Passwd do
         end
 
         it "return true if password matches" do
-          expect(Passwd.confirm_check("secret", "secret")).to be_true
+          expect(Passwd.confirm_check("secret", "secret")).to be_truthy
         end
       end
 
       context "with policy check" do
         it "return false if invalid password by policy" do
-          expect(Passwd.confirm_check("secret", "secret", true)).to be_false
+          expect(Passwd.confirm_check("secret", "secret", true)).to be_falsey
         end
 
         it "return true if valid password by policy" do
-          expect(Passwd.confirm_check("secretpass", "secretpass", true)).to be_false
+          expect(Passwd.confirm_check("secretpass", "secretpass", true)).to be_falsey
         end
       end
     end
 
     describe "#configure" do
       it "return configuration object" do
-        expect(Passwd.configure.is_a? Passwd::Config).to be_true
+        expect(Passwd.configure.is_a? Passwd::Config).to be_truthy
       end
 
       it "set config value from block" do
@@ -137,7 +137,7 @@ describe Passwd do
 
     describe "#policy_configure" do
       it "return policy object" do
-        expect(Passwd.policy_configure.is_a? Passwd::Policy).to be_true
+        expect(Passwd.policy_configure.is_a? Passwd::Policy).to be_truthy
       end
 
       it "set policy value from block" do
@@ -151,14 +151,14 @@ describe Passwd do
 
     describe "#policy_check" do
       it "Policy#valid? should be called" do
-        Passwd::Policy.instance.should_receive(:valid?).with("secret1234" ,Passwd::Config.instance)
-        expect(Passwd.policy_check("secret1234")).not_to raise_error
+        expect(Passwd::Policy.instance).to receive(:valid?).with("secret1234" ,Passwd::Config.instance)
+        Passwd.policy_check("secret1234")
       end
     end
 
     describe "#reset_policy" do
       let(:policy) {Passwd::Policy.instance}
-      
+
       before {
         policy.configure do |c|
           c.min_length = 20
@@ -174,21 +174,21 @@ describe Passwd do
       end
 
       it "require_lower should be a default" do
-        expect(policy.require_lower).to be_true
+        expect(policy.require_lower).to be_truthy
       end
 
       it "upper should be a default" do
-        expect(policy.require_upper).to be_false
+        expect(policy.require_upper).to be_falsey
       end
 
       it "number should be a default" do
-        expect(policy.require_number).to be_true
+        expect(policy.require_number).to be_truthy
       end
     end
 
     describe "#reset_config" do
       let(:config) {Passwd::Config.instance}
-      
+
       before {
         config.configure do |c|
           c.length = 20
@@ -207,15 +207,15 @@ describe Passwd do
       end
 
       it "lower should be a default" do
-        expect(config.lower).to be_true
+        expect(config.lower).to be_truthy
       end
 
       it "upper should be a default" do
-        expect(config.upper).to be_true
+        expect(config.upper).to be_truthy
       end
 
       it "number should be a default" do
-        expect(config.number).to be_true
+        expect(config.number).to be_truthy
       end
 
       it "letters_lower should be a default" do
@@ -232,4 +232,3 @@ describe Passwd do
     end
   end
 end
-

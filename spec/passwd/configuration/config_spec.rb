@@ -5,35 +5,35 @@ describe Passwd::Config do
 
   describe "defined accessors" do
     it "defined algorithm" do
-      expect(config.respond_to? :algorithm).to be_true
+      expect(config.respond_to? :algorithm).to be_truthy
     end
 
     it "defined length" do
-      expect(config.respond_to? :length).to be_true
+      expect(config.respond_to? :length).to be_truthy
     end
 
     it "defined lower" do
-      expect(config.respond_to? :lower).to be_true
+      expect(config.respond_to? :lower).to be_truthy
     end
 
     it "defined upper" do
-      expect(config.respond_to? :upper).to be_true
+      expect(config.respond_to? :upper).to be_truthy
     end
 
     it "defined number" do
-      expect(config.respond_to? :number).to be_true
+      expect(config.respond_to? :number).to be_truthy
     end
 
     it "defined letters_lower" do
-      expect(config.respond_to? :letters_lower).to be_true
+      expect(config.respond_to? :letters_lower).to be_truthy
     end
 
     it "defined letters_upper" do
-      expect(config.respond_to? :letters_upper).to be_true
+      expect(config.respond_to? :letters_upper).to be_truthy
     end
 
     it "defined letters_number" do
-      expect(config.respond_to? :letters_number).to be_true
+      expect(config.respond_to? :letters_number).to be_truthy
     end
   end
 
@@ -47,15 +47,15 @@ describe Passwd::Config do
     end
 
     it "lower should be a default" do
-      expect(config.lower).to be_true
+      expect(config.lower).to be_truthy
     end
 
     it "upper should be a default" do
-      expect(config.upper).to be_true
+      expect(config.upper).to be_truthy
     end
 
     it "number should be a default" do
-      expect(config.number).to be_true
+      expect(config.number).to be_truthy
     end
 
     it "letters_lower should be a default" do
@@ -89,15 +89,15 @@ describe Passwd::Config do
     end
 
     it "set lower from block" do
-      expect(config.lower).to be_false
+      expect(config.lower).to be_falsey
     end
 
     it "set upper from block" do
-      expect(config.upper).to be_false
+      expect(config.upper).to be_falsey
     end
 
     it "set number from block" do
-      expect(config.number).to be_false
+      expect(config.number).to be_falsey
     end
 
     it "set letters_lower from block" do
@@ -129,17 +129,17 @@ describe Passwd::Config do
 
     it "set lower from hash" do
       config.merge(lower: false)
-      expect(config.lower).to be_false
+      expect(config.lower).to be_falsey
     end
 
     it "set upper from hash" do
       config.merge(upper: false)
-      expect(config.upper).to be_false
+      expect(config.upper).to be_falsey
     end
 
     it "set number from hash" do
       config.merge(number: false)
-      expect(config.number).to be_false
+      expect(config.number).to be_falsey
     end
 
     it "set letters_lower from hash" do
@@ -166,12 +166,12 @@ describe Passwd::Config do
 
   describe "#letters" do
     it "return Array object" do
-      expect(config.letters.is_a? Array).to be_true
+      expect(config.letters.is_a? Array).to be_truthy
     end
 
     it "all elements of the string" do
       config.letters.each do |l|
-        expect(l.is_a? String).to be_true
+        expect(l.is_a? String).to be_truthy
       end
     end
 
@@ -182,17 +182,17 @@ describe Passwd::Config do
 
     it "return except for the lower case" do
       config.merge(lower: false)
-      expect(config.letters.include? "a").to be_false
+      expect(config.letters.include? "a").to be_falsey
     end
 
     it "return except for the upper case" do
       config.merge(upper: false)
-      expect(config.letters.include? "A").to be_false
+      expect(config.letters.include? "A").to be_falsey
     end
 
     it "return except for the number case" do
       config.merge(number: false)
-      expect(config.letters.include? "0").to be_false
+      expect(config.letters.include? "0").to be_falsey
     end
 
     it "raise error if letters is empty" do
@@ -222,15 +222,15 @@ describe Passwd::Config do
     end
 
     it "lower should be a default" do
-      expect(config.lower).to be_true
+      expect(config.lower).to be_truthy
     end
 
     it "upper should be a default" do
-      expect(config.upper).to be_true
+      expect(config.upper).to be_truthy
     end
 
     it "number should be a default" do
-      expect(config.number).to be_true
+      expect(config.number).to be_truthy
     end
 
     it "letters_lower should be a default" do
@@ -246,4 +246,3 @@ describe Passwd::Config do
     end
   end
 end
-

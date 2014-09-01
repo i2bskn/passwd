@@ -9,35 +9,35 @@ describe Passwd::TmpConfig do
 
   describe "defined accessors" do
     it "defined algorithm" do
-      expect(config.respond_to? :algorithm).to be_true
+      expect(config.respond_to? :algorithm).to be_truthy
     end
 
     it "defined length" do
-      expect(tmp_config.respond_to? :length).to be_true
+      expect(tmp_config.respond_to? :length).to be_truthy
     end
 
     it "defined lower" do
-      expect(tmp_config.respond_to? :lower).to be_true
+      expect(tmp_config.respond_to? :lower).to be_truthy
     end
 
     it "defined upper" do
-      expect(tmp_config.respond_to? :upper).to be_true
+      expect(tmp_config.respond_to? :upper).to be_truthy
     end
 
     it "defined number" do
-      expect(tmp_config.respond_to? :number).to be_true
+      expect(tmp_config.respond_to? :number).to be_truthy
     end
 
     it "defined letters_lower" do
-      expect(tmp_config.respond_to? :letters_lower).to be_true
+      expect(tmp_config.respond_to? :letters_lower).to be_truthy
     end
 
     it "defined letters_upper" do
-      expect(tmp_config.respond_to? :letters_upper).to be_true
+      expect(tmp_config.respond_to? :letters_upper).to be_truthy
     end
 
     it "defined letters_number" do
-      expect(tmp_config.respond_to? :letters_number).to be_true
+      expect(tmp_config.respond_to? :letters_number).to be_truthy
     end
   end
 
@@ -52,15 +52,15 @@ describe Passwd::TmpConfig do
       end
 
       it "lower should be a default" do
-        expect(tmp_config.lower).to be_true
+        expect(tmp_config.lower).to be_truthy
       end
 
       it "upper should be a default" do
-        expect(tmp_config.upper).to be_true
+        expect(tmp_config.upper).to be_truthy
       end
 
       it "number should be a default" do
-        expect(tmp_config.number).to be_true
+        expect(tmp_config.number).to be_truthy
       end
 
       it "letters_lower should be a default" do
@@ -83,18 +83,18 @@ describe Passwd::TmpConfig do
       end
 
       it "lower should be a specified params" do
-        expect(tmp_config(lower: false).lower).to be_false
-        expect(config.lower).to be_true
+        expect(tmp_config(lower: false).lower).to be_falsey
+        expect(config.lower).to be_truthy
       end
 
       it "upper should be a specified params" do
-        expect(tmp_config(upper: false).upper).to be_false
-        expect(config.upper).to be_true
+        expect(tmp_config(upper: false).upper).to be_falsey
+        expect(config.upper).to be_truthy
       end
 
       it "number should be a specified params" do
-        expect(tmp_config(number: false).number).to be_false
-        expect(config.number).to be_true
+        expect(tmp_config(number: false).number).to be_falsey
+        expect(config.number).to be_truthy
       end
 
       it "letters_lower should be a specified params" do
@@ -135,18 +135,18 @@ describe Passwd::TmpConfig do
     end
 
     it "set lower from block" do
-      expect(changed_tmp_config.lower).to be_false
-      expect(config.lower).to be_true
+      expect(changed_tmp_config.lower).to be_falsey
+      expect(config.lower).to be_truthy
     end
 
     it "set upper from block" do
-      expect(changed_tmp_config.upper).to be_false
-      expect(config.upper).to be_true
+      expect(changed_tmp_config.upper).to be_falsey
+      expect(config.upper).to be_truthy
     end
 
     it "set number from block" do
-      expect(changed_tmp_config.number).to be_false
-      expect(config.number).to be_true
+      expect(changed_tmp_config.number).to be_falsey
+      expect(config.number).to be_truthy
     end
 
     it "set letters_lower from block" do
@@ -184,20 +184,20 @@ describe Passwd::TmpConfig do
 
     it "set lower from hash" do
       default_tmp_config.merge(lower: false)
-      expect(default_tmp_config.lower).to be_false
-      expect(config.lower).to be_true
+      expect(default_tmp_config.lower).to be_falsey
+      expect(config.lower).to be_truthy
     end
 
     it "set upper from hash" do
       default_tmp_config.merge(upper: false)
-      expect(default_tmp_config.upper).to be_false
-      expect(config.upper).to be_true
+      expect(default_tmp_config.upper).to be_falsey
+      expect(config.upper).to be_truthy
     end
 
     it "set number from hash" do
       default_tmp_config.merge(number: false)
-      expect(default_tmp_config.number).to be_false
-      expect(config.number).to be_true
+      expect(default_tmp_config.number).to be_falsey
+      expect(config.number).to be_truthy
     end
 
     it "set letters_lower from hash" do
@@ -227,12 +227,12 @@ describe Passwd::TmpConfig do
 
   describe "#letters" do
     it "return Array object" do
-      expect(tmp_config.letters.is_a? Array).to be_true
+      expect(tmp_config.letters.is_a? Array).to be_truthy
     end
 
     it "all elements of the string" do
       tmp_config.letters.each do |l|
-        expect(l.is_a? String).to be_true
+        expect(l.is_a? String).to be_truthy
       end
     end
 
@@ -242,15 +242,15 @@ describe Passwd::TmpConfig do
     end
 
     it "return except for the lower case" do
-      expect(tmp_config(lower: false).letters.include? "a").to be_false
+      expect(tmp_config(lower: false).letters.include? "a").to be_falsey
     end
 
     it "return except for the upper case" do
-      expect(tmp_config(upper: false).letters.include? "A").to be_false
+      expect(tmp_config(upper: false).letters.include? "A").to be_falsey
     end
 
     it "return except for the number case" do
-      expect(tmp_config(number: false).letters.include? "0").to be_false
+      expect(tmp_config(number: false).letters.include? "0").to be_falsey
     end
 
     it "raise error if letters is empty" do

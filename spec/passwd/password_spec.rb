@@ -7,13 +7,13 @@ describe Passwd::Password do
     context "with default params" do
       let!(:password_text) {
         password_text = Passwd.create
-        Passwd.should_receive(:create).and_return(password_text)
+        expect(Passwd).to receive(:create) {password_text}
         password_text
       }
 
       let!(:time_now) {
         time_now = Time.now
-        Time.should_receive(:now).and_return(time_now)
+        expect(Time).to receive(:now) {time_now}
         time_now
       }
 
@@ -41,7 +41,7 @@ describe Passwd::Password do
       let(:salt_text) {"salt"}
       let!(:time_now) {
         time_now = Time.now
-        Time.stub(:create).and_return(time_now)
+        allow(Time).to receive(:create) {time_now}
         time_now
       }
 
@@ -138,12 +138,11 @@ describe Passwd::Password do
 
   describe "#==" do
     it "return true with valid password" do
-      expect(password == password.text).to be_true
+      expect(password == password.text).to be_truthy
     end
 
     it "return false with invalid password" do
-      expect(password == "secret").to be_false
+      expect(password == "secret").to be_falsey
     end
   end
 end
-

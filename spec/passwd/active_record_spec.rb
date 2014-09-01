@@ -12,7 +12,7 @@ describe Passwd::ActiveRecord do
 
   describe ".#included" do
     it "define singleton methods" do
-      expect(User.respond_to? :define_column).to be_true
+      expect(User.respond_to? :define_column).to be_truthy
     end
   end
 
@@ -21,19 +21,19 @@ describe Passwd::ActiveRecord do
       let(:user) {User.new}
 
       it "define singleton methods" do
-        expect(User.respond_to? :authenticate).to be_true
+        expect(User.respond_to? :authenticate).to be_truthy
       end
 
       it "define authenticate method" do
-        expect(user.respond_to? :authenticate).to be_true
+        expect(user.respond_to? :authenticate).to be_truthy
       end
 
       it "define set_password method" do
-        expect(user.respond_to? :set_password).to be_true
+        expect(user.respond_to? :set_password).to be_truthy
       end
 
       it "define update_password" do
-        expect(user.respond_to? :update_password).to be_true
+        expect(user.respond_to? :update_password).to be_truthy
       end
     end
   end
@@ -42,25 +42,24 @@ describe Passwd::ActiveRecord do
     describe ".#authenticate" do
       let!(:record) {
         record = double("record mock")
-        record.stub(:salt).and_return(salt)
-        record.stub(:password).and_return(password_hash)
+        allow(record).to receive_messages(salt: salt, password: password_hash)
         response = [record]
-        User.stub(:where).and_return(response)
+        allow(User).to receive(:where) {response}
         record
       }
 
       it "user should be returned if authentication is successful" do
-        User.should_receive(:where)
+        expect(User).to receive(:where)
         expect(User.authenticate("valid_id", password_text)).to eq(record)
       end
 
       it "should return nil if authentication failed" do
-        User.should_receive(:where)
+        expect(User).to receive(:where)
         expect(User.authenticate("valid_id", "invalid_secret")).to be_nil
       end
 
       it "should return nil if user not found" do
-        User.should_receive(:where).with(:email => "invalid_id").and_return([])
+        expect(User).to receive(:where).with(email: "invalid_id") {[]}
         expect(User.authenticate("invalid_id", password_text)).to be_nil
       end
     end
@@ -68,38 +67,37 @@ describe Passwd::ActiveRecord do
     describe "#authenticate" do
       let!(:user) {
         user = User.new
-        user.stub(:salt).and_return(salt)
-        user.stub(:password).and_return(password_hash)
+        allow(user).to receive_messages(salt: salt, password: password_hash)
         user
       }
 
       it "should return true if authentication is successful" do
-        expect(user.authenticate(password_text)).to be_true
+        expect(user.authenticate(password_text)).to be_truthy
       end
 
       it "should return false if authentication failed" do
-        expect(user.authenticate("invalid_pass")).to be_false
+        expect(user.authenticate("invalid_pass")).to be_falsey
       end
     end
 
     describe "#set_password" do
       let!(:user) {
         user = User.new
-        user.stub(:salt).and_return(salt)
+        allow(user).to receive(:salt) {salt}
         user
       }
 
       it "should return set password" do
-        user.should_receive(:salt=).with(salt)
-        user.should_receive(:password=).with(Passwd.hashing("#{salt}#{password_text}"))
+        expect(user).to receive(:salt=).with(salt)
+        expect(user).to receive(:password=).with(Passwd.hashing("#{salt}#{password_text}"))
         expect(user.set_password(password_text)).to eq(password_text)
       end
 
       it "should set random password if not specified" do
-        user.should_receive(:salt=).with(salt)
+        expect(user).to receive(:salt=).with(salt)
         random_password = Passwd.create
-        Passwd.should_receive(:create).and_return(random_password)
-        user.should_receive(:password=).with(Passwd.hashing("#{salt}#{random_password}"))
+        expect(Passwd).to receive(:create) {random_password}
+        expect(user).to receive(:password=).with(Passwd.hashing("#{salt}#{random_password}"))
         user.set_password
       end
 
@@ -107,11 +105,11 @@ describe Passwd::ActiveRecord do
         mail_addr = "foo@example.com"
         time_now = Time.now
         salt2 = Passwd.hashing("#{mail_addr}#{time_now.to_s}")
-        Time.stub(:now).and_return(time_now)
-        user.stub(:email).and_return(mail_addr)
-        user.should_receive(:salt).and_return(nil)
-        user.should_receive(:salt=).with(salt2)
-        user.should_receive(:password=).with(Passwd.hashing("#{salt2}#{password_text}"))
+        allow(Time).to receive(:now) {time_now}
+        allow(user).to receive(:email) {mail_addr}
+        expect(user).to receive(:salt) {nil}
+        expect(user).to receive(:salt=).with(salt2)
+        expect(user).to receive(:password=).with(Passwd.hashing("#{salt2}#{password_text}"))
         user.set_password(password_text)
       end
     end
@@ -119,21 +117,21 @@ describe Passwd::ActiveRecord do
     describe "#update_password" do
       let!(:user) {
         user = User.new
-        user.stub(:salt).and_return(salt)
-        user.stub(:password).and_return(password_hash)
+        allow(user).to receive(:salt) {salt}
+        allow(user).to receive(:password) {password_hash}
         user
       }
 
       context "without policy check" do
         it "should return update password" do
           pass = "new_password"
-          user.should_receive(:set_password).with(pass).and_return(pass)
+          expect(user).to receive(:set_password).with(pass) {pass}
           expect(user.update_password(password_text, pass)).to eq(pass)
         end
 
         it "should generate exception if authentication failed" do
-          Passwd.should_receive(:auth).and_return(false)
-          user.should_not_receive(:set_password)
+          expect(Passwd).to receive(:auth) {false}
+          expect(user).not_to receive(:set_password)
           expect {
             user.update_password("invalid_password", "new_password")
           }.to raise_error(Passwd::AuthError)
@@ -143,14 +141,14 @@ describe Passwd::ActiveRecord do
       context "with policy check" do
         it "should return update password" do
           pass = "new_password"
-          Passwd.should_receive(:policy_check).and_return(true)
-          user.should_receive(:set_password).with(pass).and_return(pass)
+          expect(Passwd).to receive(:policy_check) {true}
+          expect(user).to receive(:set_password).with(pass) {pass}
           expect(user.update_password(password_text, pass, true)).to eq(pass)
         end
 
         it "should generate exception if policy not match" do
           pass = "new_password"
-          Passwd.should_receive(:policy_check).and_return(false)
+          expect(Passwd).to receive(:policy_check) {false}
           expect {
             user.update_password(password_text, pass, true)
             }.to raise_error(Passwd::PolicyNotMatch)
@@ -159,4 +157,3 @@ describe Passwd::ActiveRecord do
     end
   end
 end
-
