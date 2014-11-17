@@ -2,7 +2,7 @@ module Passwd
   class Password
     attr_reader :text, :hash, :salt_text, :salt_hash
 
-    def initialize(options={})
+    def initialize(options = {})
       @text = options.fetch(:password, Passwd.create)
       @salt_text = options.fetch(:salt_text, Time.now.to_s)
       @salt_hash = Passwd.hashing(@salt_text)

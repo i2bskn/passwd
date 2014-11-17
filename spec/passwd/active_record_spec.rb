@@ -43,23 +43,23 @@ describe Passwd::ActiveRecord do
       let!(:record) {
         record = double("record mock")
         allow(record).to receive_messages(salt: salt, password: password_hash)
-        response = [record]
-        allow(User).to receive(:where) {response}
+        response = record
+        allow(User).to receive(:find_by) {response}
         record
       }
 
       it "user should be returned if authentication is successful" do
-        expect(User).to receive(:where)
+        expect(User).to receive(:find_by)
         expect(User.authenticate("valid_id", password_text)).to eq(record)
       end
 
       it "should return nil if authentication failed" do
-        expect(User).to receive(:where)
+        expect(User).to receive(:find_by)
         expect(User.authenticate("valid_id", "invalid_secret")).to be_nil
       end
 
       it "should return nil if user not found" do
-        expect(User).to receive(:where).with(email: "invalid_id") {[]}
+        expect(User).to receive(:find_by).with(email: "invalid_id") {nil}
         expect(User.authenticate("invalid_id", password_text)).to be_nil
       end
     end
