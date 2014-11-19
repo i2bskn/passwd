@@ -6,6 +6,8 @@ module Passwd
     VALID_OPTIONS = [
       :algorithm,
       :length,
+      :policy,
+      :stretching,
     ].concat(KINDS).concat(LETTERS).freeze
 
     attr_accessor *VALID_OPTIONS
@@ -16,6 +18,17 @@ module Passwd
 
     def configure
       yield self
+    end
+
+    def merge(params)
+      self.dup.merge!(params)
+    end
+
+    def merge!(params)
+      params.keys.each do |key|
+        self.send("#{key}=", params[key])
+      end
+      self
     end
 
     KINDS.each do |kind|
@@ -29,16 +42,11 @@ module Passwd
       LETTERS.map {|l| self.send(l)}.flatten
     end
 
-    def to_options
-      {
-        length: self.length,
-        letters: self.letters
-      }
-    end
-
     def reset
       self.algorithm = :sha512
       self.length = 8
+      self.policy = Policy.new
+      self.stretching = nil
       self.lower = true
       self.upper = true
       self.number = true
@@ -47,13 +55,22 @@ module Passwd
       self.letters_number = ("0".."9").to_a
     end
 
+    module Writable
+      def configure(options = {}, &block)
+        Config.merge!(options) unless options.empty?
+        Config.configure(&block) if block_given?
+      end
+
+      def policy_configure(&block)
+        Config.policy.configure(&block) if block_given?
+      end
+    end
+
     module Accessible
       def self.included(base)
         base.const_set(:Config, Configuration.new)
       end
     end
   end
-
-  include Configuration::Accessible
 end
 
