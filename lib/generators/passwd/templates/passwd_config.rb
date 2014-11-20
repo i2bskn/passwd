@@ -29,3 +29,13 @@ Passwd.policy_configure do |c|
   # c.require_number = true
 end
 
+# Session key for authentication
+Rails.application.config.passwd.session_key = :user_id
+
+# Authentication Model Class
+Rails.application.config.passwd.authenticate_class = :User
+
+# Redirect path when not signin
+# E.G. :signin_path # Do not specify ***_url
+Rails.application.config.passwd.redirect_to = nil
+
