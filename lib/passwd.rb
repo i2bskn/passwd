@@ -8,8 +8,7 @@ require "passwd/configuration"
 require "passwd/base"
 require "passwd/salt"
 require "passwd/password"
-require "passwd/rails/railtie"
-require "passwd/rails/active_record"
+require "passwd/railtie"
 
 module Passwd
   include Configuration::Accessible
@@ -44,7 +43,7 @@ if defined?(ActiveRecord)
         define_method :to_password do
           _salt_hash = self.send(salt_name)
           _password = self.send(password_name)
-          Passwd::Password.from_hash(_password, _salt_hash))
+          Passwd::Password.from_hash(_password, _salt_hash)
         end
       end
 
