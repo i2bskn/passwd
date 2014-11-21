@@ -8,7 +8,7 @@ module Passwd
       options = default_options.merge(options)
 
       if options.has_key?(:hash)
-        raise unless options.has_key?(:salt_hash)
+        raise ArgumentError unless options.has_key?(:salt_hash)
         @salt = Salt.from_hash(options[:salt_hash], self)
         @hash = options[:hash]
       else
@@ -37,7 +37,7 @@ module Passwd
     end
 
     def rehash
-      raise unless self.plain
+      raise PasswdError unless self.plain
       @hash = digest([self.salt.hash, self.plain].join)
     end
 
@@ -54,7 +54,7 @@ module Passwd
     end
 
     def valid?
-      raise unless self.plain
+      raise PasswdError unless self.plain
 
       return false if Config.policy.min_length > self.plain.size
 
@@ -80,7 +80,7 @@ module Passwd
       end
 
       def include_char?(letters)
-        raise unless self.plain
+        raise PasswdError unless self.plain
         self.plain.chars.uniq.each {|c| return true if letters.include?(c)}
         false
       end

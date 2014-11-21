@@ -52,11 +52,11 @@ module Passwd
 
       def _define_update_password(_salt_key, _pass_key)
         define_method :update_password do |_old, _new, _policy = false|
-          raise if _policy && Passwd.policy_check(_new)
+          raise PolicyNotMatch if _policy && !Passwd.policy_check(_new)
           if self.passwd.match?(_old)
             self.set_password(_new)
           else
-            raise
+            raise AuthenticationFails
           end
         end
       end

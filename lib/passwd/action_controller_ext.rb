@@ -21,12 +21,12 @@ module Passwd
 
     private
       def auth_key
-        Rails.application.config.passwd.session_key
+        Rails.application.config.passwd.session_key || :user_id
       end
 
       def auth_class
         @_auth_class ||=
-          Rails.application.config.passwd.authenticate_class.to_s.constantize
+          (Rails.application.config.passwd.authenticate_class || :User).to_s.constantize
       end
 
       def _redirect_path
@@ -39,7 +39,7 @@ module Passwd
           if _redirect_path
             redirect_to _redirect_path
           else
-            raise
+            raise UnauthorizedAccess
           end
         end
       end

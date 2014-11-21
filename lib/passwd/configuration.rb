@@ -38,7 +38,7 @@ module Passwd
     end
 
     def letters
-      KINDS.detect {|k| self.send(k)} || (raise "letters is empty")
+      KINDS.detect {|k| self.send(k)} || (raise ConfigError, "letters is empry.")
       LETTERS.map {|l| self.send(l)}.flatten
     end
 
