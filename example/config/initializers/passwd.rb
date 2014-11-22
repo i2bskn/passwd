@@ -37,5 +37,5 @@ Rails.application.config.passwd.authenticate_class = :User
 
 # Redirect path when not signin
 # E.G. :signin_path # Do not specify ***_url
-Rails.application.config.passwd.redirect_to = nil
+Rails.application.config.passwd.redirect_to = :signin_path
 

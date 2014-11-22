@@ -134,6 +134,7 @@ class SessionsController < ApplicationController
   def destroy
     # Clear session (Only user_id)
     signout!
+    redirect_to some_url
   end
 end
 ```
