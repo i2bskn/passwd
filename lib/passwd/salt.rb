@@ -17,13 +17,13 @@ module Passwd
       end
     end
 
-    def plain=(value)
+    def update_plain(value)
       @plain = value
       @hash = digest_without_stretching(@plain)
       update_password!
     end
 
-    def hash=(value)
+    def update_hash(value)
       @plain = nil
       @hash = value
       update_password!
@@ -43,7 +43,7 @@ module Passwd
       end
 
       def update_password!
-        @password.rehash if @password
+        @password.rehash if @password && @password.plain
       end
   end
 end

@@ -21,19 +21,19 @@ module Passwd
           else
             Salt.new(password: self)
           end
-        self.plain = options[:plain]
+        self.update_plain(options[:plain])
       end
     end
 
-    def plain=(value)
+    def update_plain(value)
       @plain = value
       rehash
     end
 
-    def hash=(value, salt_hash)
+    def update_hash(value, salt_hash)
       @plain = nil
       @hash = value
-      self.salt.hash = salt_hash
+      self.salt.update_hash(salt_hash)
     end
 
     def rehash
