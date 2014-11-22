@@ -21,7 +21,14 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
 RSpec.configure do |config|
   config.order = "random"
-  config.before(:all) { require "db/schema" }
-  config.after { Passwd::PwConfig.reset }
+
+  config.before :all do
+    require "db/schema"
+  end
+
+  config.after :each do
+    Passwd::PwConfig.reset
+    DataUtil.clear
+  end
 end
 

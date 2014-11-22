@@ -59,7 +59,7 @@ module Passwd
 
     module Writable
       def self.extended(base)
-        base.include(Accessible) unless defined?(base::PwConfig)
+        base.send(:include, Accessible)
       end
 
       def configure(options = {}, &block)

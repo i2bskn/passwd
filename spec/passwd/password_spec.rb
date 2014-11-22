@@ -62,13 +62,95 @@ describe Passwd::Password do
       pswd.update_plain("secret")
       expect(pswd).to have_attributes(plain: "secret")
     }
+
+    it {
+      expect {
+        pswd.update_plain("secret")
+      }.to change { pswd.plain }
+    }
   end
 
   describe "#update_hash" do
     it {
+      expect(pswd).not_to receive(:rehash)
+      pswd.update_hash("hashed", "salt")
+      expect(pswd).to have_attributes(hash: "hashed")
+      expect(pswd.salt).to have_attributes(hash: "salt")
+    }
+
+    it {
       expect {
         pswd.update_hash("hashed", "salt")
       }.to change { pswd.plain }
+    }
+  end
+
+  describe "#match?" do
+    it { expect(pswd.match?(pswd.plain)).to be_truthy }
+
+    it {
+      invalid = [pswd.plain, "invalid"].join
+      expect(pswd.match?(invalid)).to be_falsy
+    }
+  end
+
+  describe "#==" do
+    it {
+      expect(pswd).to receive(:match?)
+      pswd == pswd.plain
+    }
+  end
+
+  describe "#valid?" do
+    it {
+      pswd.update_plain("ValidPassw0rd")
+      expect(pswd.valid?).to be_truthy
+    }
+
+    it {
+      pswd.update_plain("a" * (Passwd::PwConfig.policy.min_length - 1))
+      expect(pswd.valid?).to be_falsy
+    }
+
+    it {
+      pswd.update_hash("hashed", "salt")
+      expect {
+        pswd.valid?
+      }.to raise_error(Passwd::PasswdError)
+    }
+  end
+
+  describe "#default_options" do
+    it {
+      expect(pswd.send(:default_options)).to satisfy {|v| v.has_key?(:plain) }
+    }
+  end
+
+  describe "#include_char?" do
+    it {
+      pswd.update_plain("secret")
+      expect(pswd.send(:include_char?, ["s"])).to be_truthy
+    }
+
+    it {
+      expect {
+        pswd.update_hash("hashed", "salt")
+        pswd.send(:include_char?, [])
+      }.to raise_error(Passwd::PasswdError)
+    }
+  end
+
+  describe ".from_plain" do
+    it {
+      expect(Passwd::Password).to receive(:new)
+      Passwd::Password.from_plain("secret")
+    }
+  end
+
+  describe ".from_hash" do
+    it {
+      expect(Passwd::Password).to receive(:new)
+      Passwd::Password.from_hash("hashed", "salt")
     }
   end
 end

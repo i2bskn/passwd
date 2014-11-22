@@ -16,7 +16,7 @@ module Passwd
       def _define_passwd(_salt_key, _pass_key)
         define_method :passwd do |cache = true|
           return @_passwd if cache && @_passwd
-          self.reload
+          self.reload unless self.new_record?
           _salt, _pass = self.send(_salt_key), self.send(_pass_key)
           if _salt.present? && _pass.present?
             @_passwd = Passwd::Password.from_hash(_pass, _salt)
