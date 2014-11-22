@@ -1,16 +1,16 @@
 module Passwd
   module Base
     def random(options = {})
-      c = Config.merge(options)
+      c = PwConfig.merge(options)
       Array.new(c.length){c.letters[rand(c.letters.size)]}.join
     end
 
     def digest(plain, _algorithm = nil)
-      _algorithm ||= Config.algorithm
+      _algorithm ||= PwConfig.algorithm
 
-      if Config.stretching
+      if PwConfig.stretching
         _pass = plain
-        Config.stretching.times do
+        PwConfig.stretching.times do
           _pass = digest_without_stretching(_pass, _algorithm)
         end
       else
@@ -19,7 +19,7 @@ module Passwd
     end
 
     def digest_without_stretching(plain, _algorithm = nil)
-      algorithm(_algorithm || Config.algorithm).hexdigest(plain)
+      algorithm(_algorithm || PwConfig.algorithm).hexdigest(plain)
     end
 
     private

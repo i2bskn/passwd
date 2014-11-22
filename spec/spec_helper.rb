@@ -19,5 +19,6 @@ require "passwd"
 
 RSpec.configure do |config|
   config.order = "random"
+  config.after { Passwd::PwConfig.reset }
 end
 

@@ -56,11 +56,11 @@ module Passwd
     def valid?
       raise PasswdError unless self.plain
 
-      return false if Config.policy.min_length > self.plain.size
+      return false if PwConfig.policy.min_length > self.plain.size
 
       Configuration::KINDS.each do |key|
-        if Config.policy.send("require_#{key}")
-          return false unless include_char?(Config.send("letters_#{key}"))
+        if PwConfig.policy.send("require_#{key}")
+          return false unless include_char?(PwConfig.send("letters_#{key}"))
         end
       end
       true

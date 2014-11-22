@@ -39,7 +39,9 @@ module Passwd
 
     def letters
       KINDS.detect {|k| self.send(k)} || (raise ConfigError, "letters is empry.")
-      LETTERS.map {|l| self.send(l)}.flatten
+      LETTERS.zip(KINDS).map {|l, k|
+        self.send(l) if self.send(k)
+      }.compact.flatten
     end
 
     def reset
@@ -56,19 +58,23 @@ module Passwd
     end
 
     module Writable
+      def self.extended(base)
+        base.include(Accessible) unless defined?(base::PwConfig)
+      end
+
       def configure(options = {}, &block)
-        Config.merge!(options) unless options.empty?
-        Config.configure(&block) if block_given?
+        PwConfig.merge!(options) unless options.empty?
+        PwConfig.configure(&block) if block_given?
       end
 
       def policy_configure(&block)
-        Config.policy.configure(&block) if block_given?
+        PwConfig.policy.configure(&block) if block_given?
       end
     end
 
     module Accessible
       def self.included(base)
-        base.const_set(:Config, Configuration.new)
+        base.const_set(:PwConfig, Configuration.new)
       end
     end
   end

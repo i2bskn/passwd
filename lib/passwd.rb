@@ -8,12 +8,11 @@ require "passwd/configuration"
 require "passwd/base"
 require "passwd/salt"
 require "passwd/password"
-require "passwd/railtie"
+require "passwd/railtie" if defined?(Rails)
 
 module Passwd
-  include Configuration::Accessible
-  extend Configuration::Writable
   extend Base
+  extend Configuration::Writable
 
   def self.policy_check(plain)
     Password.from_plain(plain).valid?
