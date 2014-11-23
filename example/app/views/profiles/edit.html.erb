@@ -1,0 +1,14 @@
+<h1>Editing Profile</h1>
+
+<%= form_for current_user, url: profile_path do |f| %>
+  <%= f.text_field :name %>
+  <%= f.text_field :email %>
+  <%= f.submit %>
+<% end %>
+
+<%= form_tag update_password_profile_path, method: :patch do %>
+  <%= password_field_tag :old_password, nil, placeholder: "Password", required: true %>
+  <%= password_field_tag :new_password, nil, placeholder: "New Password", required: true %>
+  <%= submit_tag "Change" %>
+<% end %>
+
