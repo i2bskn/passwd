@@ -1,13 +1,5 @@
+sudo: false
 language: ruby
 rvm:
-  - 2.0.0
-  - 2.1.0
-branches:
-  only:
-    - master
-gemfile:
-  - Gemfile
-script: bundle exec rake spec
-notifications:
-  mails:
-    - i2bskn@gmail.com
+  - 2.5.1
+before_install: gem install bundler -v 1.16.2

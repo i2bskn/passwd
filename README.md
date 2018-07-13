@@ -1,9 +1,6 @@
 # Passwd
 
 [![Gem Version](https://badge.fury.io/rb/passwd.svg)](http://badge.fury.io/rb/passwd)
-[![Build Status](https://travis-ci.org/i2bskn/passwd.svg?branch=master)](https://travis-ci.org/i2bskn/passwd)
-[![Coverage Status](https://img.shields.io/coveralls/i2bskn/passwd.svg)](https://coveralls.io/r/i2bskn/passwd?branch=master)
-[![Code Climate](https://codeclimate.com/github/i2bskn/passwd/badges/gpa.svg)](https://codeclimate.com/github/i2bskn/passwd)
 
 Password utilities and integration to Rails.
 
@@ -167,4 +164,3 @@ $ bundle exec rails generate passwd:config
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
-
