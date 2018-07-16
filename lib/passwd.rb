@@ -5,6 +5,7 @@ require "securerandom"
 require "passwd/version"
 require "passwd/config"
 require "passwd/password"
+require "passwd/railtie" if defined?(Rails)
 
 class Passwd
   class << self
