@@ -15,10 +15,6 @@ class Passwd
       merge(options)
     end
 
-    def configure
-      yield self
-    end
-
     def merge(options)
       options.keys.each { |key| send("#{key}=", options[key]) }
       self

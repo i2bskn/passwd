@@ -4,7 +4,6 @@ require "securerandom"
 
 require "passwd/version"
 require "passwd/config"
-require "passwd/password"
 require "passwd/railtie" if defined?(Rails)
 
 class Passwd
@@ -18,8 +17,8 @@ class Passwd
     end
   end
 
-  def initialize(object = nil)
-    @config = object.is_a?(Config) ? object : Config.new(object || {})
+  def initialize(conf = nil)
+    @config = conf
   end
 
   def hashed_password(plain, salt)
