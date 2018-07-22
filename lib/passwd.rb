@@ -3,6 +3,7 @@ require "forwardable"
 require "securerandom"
 
 require "passwd/version"
+require "passwd/errors"
 require "passwd/config"
 require "passwd/railtie" if defined?(Rails)
 
