@@ -1,4 +1,5 @@
 require "digest"
+require "securerandom"
 
 require "passwd/version"
 require "passwd/errors"
