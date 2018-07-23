@@ -22,7 +22,7 @@ class Passwd
   end
 
   def hashed_password(plain, salt)
-    config.stretching.times.with_object([digest_class.hexdigest([plain, salt].join)]) { |_, pass|
+    config.stretching.to_i.times.with_object([digest_class.hexdigest([plain, salt].join)]) { |_, pass|
       pass[0] = digest_class.hexdigest(pass[0])
     }.first
   end

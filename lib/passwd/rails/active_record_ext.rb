@@ -28,7 +28,7 @@ module Passwd::Rails
         define_method :set_password do |plain = nil|
           plain ||= passwd.random
           random_salt = Rails.application.config.passwd.random_salt || proc { SecureRandom.uuid }
-          send("#{salt_col}=", random_salt.call) unless send(salt_col)
+          send("#{salt_col}=", random_salt.call(self)) unless send(salt_col)
           send("#{password_col}=", passwd.hashed_password(plain, send(salt_col)))
           plain
         end
