@@ -32,8 +32,8 @@ module Passwd::Rails
         @current_user = nil
       end
 
-      def redirect_to_referer_or(path)
-        redirect_to session[:referer].presence || path
+      def redirect_to_referer_or(path, options = {})
+        redirect_to session[:referer].presence || path, **options
       end
 
       def require_signin

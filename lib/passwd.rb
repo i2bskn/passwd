@@ -28,7 +28,7 @@ class Passwd
   end
 
   def random(n = nil)
-    Array.new(n || config.length) { config.letters[rand(config.letters.size)] }.join
+    Array.new(n || config.length) { config.characters[rand(config.characters.size)] }.join
   end
 
   def config

@@ -11,7 +11,7 @@ Passwd.current.config.tap do |config|
   # config.length = 10
 
   # Array of characters used for random password generation
-  # config.letters = [("a".."z"), ("A".."Z"), ("0".."9")].map(&:to_a).flatten
+  # config.characters = [("a".."z"), ("A".."Z"), ("0".."9")].map(&:to_a).flatten
 end
 
 # Session key for authentication

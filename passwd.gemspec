@@ -1,6 +1,6 @@
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'passwd/version'
+require "passwd/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "passwd"
@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["i2bskn"]
   spec.email         = ["i2bskn@gmail.com"]
 
-  spec.description   = %q{The various utilities on password}
-  spec.summary       = %q{Password utility}
+  spec.description   = %q{Passwd is provide hashed password creation and authentication.}
+  spec.summary       = %q{Passwd is provide hashed password creation and authentication.}
   spec.homepage      = "https://github.com/i2bskn/passwd"
   spec.license       = "MIT"
 

@@ -2,7 +2,7 @@
 
 [![Gem Version](https://badge.fury.io/rb/passwd.svg)](http://badge.fury.io/rb/passwd)
 
-Password utilities and integration to Rails.
+Passwd is provide hashed password creation and authentication.
 
 ## Installation
 
@@ -14,9 +14,30 @@ gem "passwd"
 
 And then execute:
 
-    $ bundle
+```
+$ bundle install
+```
+
+Create config file(Only Rails) with:
+
+```
+$ bundle exec rails generate passwd:install
+```
+
+The following file will be created.  
+See [config](https://github.com/i2bskn/passwd/blob/master/lib/generators/passwd/install/templates/passwd.rb) if not Rails.
+
+- `config/initializers/passwd.rb`
 
 ## Usage
+
+### Ruby
+
+```ruby
+passwd = Passwd.current
+passwd.random(10) # Create random password of 10 characters.
+passwd.hashed_password("secret", "salt") # Create hashed password with stretching.
+```
 
 ### ActiveRecord with Rails
 
@@ -54,21 +75,20 @@ Returns nil if authentication fails or doesn't exists user.
 Instance method is not required `id`.
 
 ```ruby
-user = User.authenticate(params[:email], params[:password]) # => return user object or nil.
-user.authenticate(params[:password])
+user = User.authenticate(params[:email], params[:password]) # Returns user object or nil.
+user.authenticate(params[:password]) # Returns true if authentication succeeded.
 ```
 
 `set_password` method will be set random password.  
 To specify password as an argument if you want to specify a password.  
 
 ```ruby
-current_user.set_password("secret") # => random password if not specified a argument.
-current_user.passwd.plain # => new password
+current_user.set_password("secret") # Set random password if not specified a argument.
 current_user.save
 
 new_user = User.new
-password = new_user.passwd.plain
-UserMailer.register(new_user, password).deliver!
+random_plain_password = new_user.set_password
+UserMailer.register(new_user, random_plain_password).deliver!
 ```
 
 ### ActionController
@@ -103,7 +123,7 @@ class SessionsController < ApplicationController
     if @user
       # Save user_id to session
       signin(@user)
-      redirect_to some_path, notice: "Signin was successful. Hello #{current_user.name}"
+      redirect_to_referer_or some_path, notice: "Signin was successful. Hello #{current_user.name}"
     else # Authentication fails
       render action: :new
     end
@@ -118,31 +138,19 @@ class SessionsController < ApplicationController
 end
 ```
 
-`current_user` method available if already signin.
+`current_user` and `signin?` method available in controllers and views.
 
 ```ruby
-# app/controllers/greet_controller.rb
 def greet
-  render text: "Hello #{current_user.name}!!"
+  name = signin? ? current_user.name : "Guest"
+  render text: "Hello #{name}!!"
 end
-
-# app/views/greet/greet.html.erb
-<p>Hello <%= current_user.name %>!!<p>
-```
-
-### Generate configuration file
-
-Run generator of Rails.  
-Configuration file created to `config/initializers/passwd.rb`.
-
-```
-$ bundle exec rails generate passwd:install
 ```
 
 ## Contributing
 
-1. Fork it ( https://github.com/i2bskn/passwd/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+Bug reports and pull requests are welcome on GitHub at https://github.com/i2bskn/passwd.
+
+## License
+
+The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).

@@ -4,7 +4,7 @@ class Passwd
       :algorithm,
       :stretching,
       :length,
-      :letters,
+      :characters,
     ].freeze
 
     attr_accessor *VALID_OPTIONS
@@ -23,7 +23,7 @@ class Passwd
       @algorithm  = :sha512
       @stretching = 100
       @length     = 10
-      @letters    = [("a".."z"), ("A".."Z"), ("0".."9")].map(&:to_a).flatten
+      @characters = [("a".."z"), ("A".."Z"), ("0".."9")].map(&:to_a).flatten
     end
   end
 end
