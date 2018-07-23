@@ -3,8 +3,7 @@ class Passwd
     VALID_OPTIONS = [
       :algorithm,
       :stretching,
-      :password_length,
-      :salt_length,
+      :length,
       :letters,
     ].freeze
 
@@ -21,11 +20,10 @@ class Passwd
     end
 
     def reset
-      @algorithm       = :sha512
-      @stretching      = 100
-      @password_length = 10
-      @salt_length     = 10
-      @letters         = [("a".."z"), ("A".."Z"), ("0".."9")].map(&:to_a).flatten
+      @algorithm  = :sha512
+      @stretching = 100
+      @length     = 10
+      @letters    = [("a".."z"), ("A".."Z"), ("0".."9")].map(&:to_a).flatten
     end
   end
 end

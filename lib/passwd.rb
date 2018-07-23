@@ -1,6 +1,4 @@
 require "digest"
-require "forwardable"
-require "securerandom"
 
 require "passwd/version"
 require "passwd/errors"
@@ -26,6 +24,10 @@ class Passwd
     config.stretching.times.with_object([digest_class.hexdigest([plain, salt].join)]) { |_, pass|
       pass[0] = digest_class.hexdigest(pass[0])
     }.first
+  end
+
+  def random(n = nil)
+    Array.new(n || config.length) { config.letters[rand(config.letters.size)] }.join
   end
 
   def config
