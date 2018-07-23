@@ -1,25 +1,43 @@
-require "digest/sha1"
-require "digest/sha2"
+require "digest"
+require "securerandom"
 
 require "passwd/version"
 require "passwd/errors"
-require "passwd/policy"
-require "passwd/configuration"
-require "passwd/base"
-require "passwd/salt"
-require "passwd/password"
+require "passwd/config"
 require "passwd/railtie" if defined?(Rails)
 
-module Passwd
-  extend Base
-  extend Configuration::Writable
+class Passwd
+  class << self
+    def current
+      @current ||= new
+    end
 
-  def self.policy_check(plain)
-    Password.from_plain(plain).valid?
+    def current=(passwd)
+      @current = passwd
+    end
   end
 
-  def self.match?(plain, salt_hash, hash)
-    Password.from_hash(hash, salt_hash).match?(plain)
+  def initialize(conf = nil)
+    @config = conf
   end
+
+  def hashed_password(plain, salt)
+    config.stretching.to_i.times.with_object([digest_class.hexdigest([plain, salt].join)]) { |_, pass|
+      pass[0] = digest_class.hexdigest(pass[0])
+    }.first
+  end
+
+  def random(n = nil)
+    Array.new(n || config.length) { config.letters[rand(config.letters.size)] }.join
+  end
+
+  def config
+    @config ||= Config.new
+  end
+
+  private
+
+    def digest_class
+      Digest.const_get(config.algorithm.upcase)
+    end
 end
-

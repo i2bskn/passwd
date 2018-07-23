@@ -1,0 +1,5 @@
+Description:
+    Create Passwd config file.
+
+Example:
+    rails generate passwd:install

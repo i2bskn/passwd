@@ -1,9 +1,6 @@
 # Passwd
 
 [![Gem Version](https://badge.fury.io/rb/passwd.svg)](http://badge.fury.io/rb/passwd)
-[![Build Status](https://travis-ci.org/i2bskn/passwd.svg?branch=master)](https://travis-ci.org/i2bskn/passwd)
-[![Coverage Status](https://img.shields.io/coveralls/i2bskn/passwd.svg)](https://coveralls.io/r/i2bskn/passwd?branch=master)
-[![Code Climate](https://codeclimate.com/github/i2bskn/passwd/badges/gpa.svg)](https://codeclimate.com/github/i2bskn/passwd)
 
 Password utilities and integration to Rails.
 
@@ -74,24 +71,6 @@ password = new_user.passwd.plain
 UserMailer.register(new_user, password).deliver!
 ```
 
-`update_password` method will be set new password if the authentication successful.  
-But `update_password` method doesn't call `save` method.
-
-```ruby
-# update_password(OLD_PASSWORD, NEW_PASSWORD[, POLICY_CHECK=false])
-current_user.update_password(old_pass, new_pass, true)
-current_user.save
-```
-
-#### Policy check
-
-Default policy is 8 more characters and require lower case and require number.  
-Can be changed in configuration file.
-
-```ruby
-Passwd.policy_check("secret") # => true or false
-```
-
 ### ActionController
 
 Already several methods is available in your controller.
@@ -123,8 +102,8 @@ class SessionsController < ApplicationController
 
     if @user
       # Save user_id to session
-      signin!(@user)
-      redirect_to some_url, notice: "Signin was successful. Hello #{current_user.name}"
+      signin(@user)
+      redirect_to some_path, notice: "Signin was successful. Hello #{current_user.name}"
     else # Authentication fails
       render action: :new
     end
@@ -133,8 +112,8 @@ class SessionsController < ApplicationController
   # DELETE /signout
   def destroy
     # Clear session (Only user_id)
-    signout!
-    redirect_to some_url
+    signout
+    redirect_to some_path
   end
 end
 ```
@@ -157,7 +136,7 @@ Run generator of Rails.
 Configuration file created to `config/initializers/passwd.rb`.
 
 ```
-$ bundle exec rails generate passwd:config
+$ bundle exec rails generate passwd:install
 ```
 
 ## Contributing
@@ -167,4 +146,3 @@ $ bundle exec rails generate passwd:config
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
-
