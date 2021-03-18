@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.name          = "passwd"
   spec.version       = Passwd::VERSION
   spec.authors       = ["i2bskn"]
-  spec.email         = ["i2bskn@gmail.com"]
+  spec.email         = ["iiboshi@craftake.co.jp"]
 
   spec.description   = %q{Passwd is provide hashed password creation and authentication.}
   spec.summary       = %q{Passwd is provide hashed password creation and authentication.}
@@ -21,8 +21,8 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_development_dependency "bundler"
-  spec.add_development_dependency "rake"
-  spec.add_development_dependency "minitest", "~> 5.0"
-  spec.add_development_dependency "pry"
+  spec.add_dependency "bcrypt", "~> 3.1.0"
+  spec.add_development_dependency "bundler", "~> 2.1.0"
+  spec.add_development_dependency "rake", "~> 13.0.0"
+  spec.add_development_dependency "pry", "~> 0.14.0"
 end
