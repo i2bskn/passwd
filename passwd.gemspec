@@ -22,7 +22,9 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "bcrypt", "~> 3.1.0"
-  spec.add_development_dependency "bundler", "~> 2.1.0"
+  spec.add_development_dependency "bundler", ">= 2.1.0"
   spec.add_development_dependency "rake", "~> 13.0.0"
+  spec.add_development_dependency "rspec", "~> 3.10.0"
+  spec.add_development_dependency "rubocop", "1.11.0"
   spec.add_development_dependency "pry", "~> 0.14.0"
 end
