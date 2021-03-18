@@ -36,7 +36,10 @@ See [config](https://github.com/i2bskn/passwd/blob/master/lib/generators/passwd/
 ```ruby
 passwd = Passwd.current
 passwd.random(10) # Create random password of 10 characters.
-passwd.hashed_password("secret", "salt") # Create hashed password with stretching.
+password = passwd.password_hashing("secret") # Create hashed password from plain text.
+password == "secret" # => true
+load_password = passwd.load_password("hashed_password") # Load hashed password.
+load_password == "secret"
 ```
 
 ### ActiveRecord with Rails
@@ -56,7 +59,6 @@ User model The following column are required.
 Column name can be changed with the specified options.
 
 - `:id => :email` Unique value to be used for authentication.
-- `:salt => :salt` Column of String to save the salt.
 - `:password => :password` Column of String to save the hashed password.
 
 Use the `name` column as id.

@@ -1,10 +1,10 @@
 module Passwd::Rails
   module ActiveRecordExt
-    def with_authenticate(passwd: nil, user_id: :email, salt: :salt, password: :password)
+    def with_authenticate(passwd: nil, user_id: :email, password: :password)
       passwd ||= Passwd.current
       define_singleton_auth_with_passwd(user_id)
-      define_instance_auth_with_passwd(passwd, salt, password)
-      define_instance_set_password(passwd, salt, password)
+      define_instance_auth_with_passwd(passwd, password)
+      define_instance_set_password(passwd, password)
     end
 
     private
@@ -18,18 +18,16 @@ module Passwd::Rails
         end
       end
 
-      def define_instance_auth_with_passwd(passwd, salt_col, password_col)
+      def define_instance_auth_with_passwd(passwd, password_col)
         define_method :authenticate do |plain|
-          passwd.hashed_password(plain, send(salt_col)) == send(password_col)
+          BCrypt::Password.new(send(password_col)) == plain
         end
       end
 
-      def define_instance_set_password(passwd, salt_col, password_col)
+      def define_instance_set_password(passwd, password_col)
         define_method :set_password do |plain = nil|
           plain ||= passwd.random
-          random_salt = Rails.application.config.passwd.random_salt || proc { SecureRandom.uuid }
-          send("#{salt_col}=", random_salt.call(self)) unless send(salt_col)
-          send("#{password_col}=", passwd.hashed_password(plain, send(salt_col)))
+          send("#{password_col}=", passwd.password_hashing(plain))
           plain
         end
       end

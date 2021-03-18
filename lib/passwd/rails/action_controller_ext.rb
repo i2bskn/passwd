@@ -33,7 +33,7 @@ module Passwd::Rails
       end
 
       def redirect_to_referer_or(path, options = {})
-        redirect_to session[:referer].presence || path, **options
+        redirect_to session[:signin_referer].presence || path, **options
       end
 
       def require_signin
@@ -42,7 +42,7 @@ module Passwd::Rails
         path = _signin_path
         raise UnauthorizedAccess unless path
 
-        session[:referer] = request.fullpath
+        session[:signin_referer] = request.fullpath
         redirect_to path
       end
 

@@ -1,7 +1,6 @@
 class Passwd
   class Config
     VALID_OPTIONS = [
-      :algorithm,
       :stretching,
       :length,
       :characters,
@@ -20,8 +19,7 @@ class Passwd
     end
 
     def reset
-      @algorithm  = :sha512
-      @stretching = 100
+      @stretching = 12
       @length     = 10
       @characters = [("a".."z"), ("A".."Z"), ("0".."9")].map(&:to_a).flatten
     end

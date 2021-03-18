@@ -1,11 +1,8 @@
 Passwd.current.config.tap do |config|
-  # Hashing algorithm
-  # Supported algorithm is :md5, :rmd160, :sha1, :sha256, :sha384 and :sha512
-  # config.algorithm = :sha512
-
   # Number of hashed by stretching
-  # Not stretching if specified nil or 0.
-  # config.stretching = 100
+  # Minimum is 4, maximum is 31, default is 12.
+  # See also BCrypt::Engine
+  # config.stretching = 12
 
   # Random generate password length
   # config.length = 10
@@ -22,6 +19,3 @@ end
 
 # Redirect path when not signin
 # Rails.application.config.passwd.signin_path = :signin_path
-
-# Salt generation logic
-# Rails.application.config.passwd.random_salt = proc { SecureRandom.uuid }
