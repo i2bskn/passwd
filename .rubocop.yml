@@ -5,6 +5,9 @@ AllCops:
     - "node_modules/**/*"
     - "vendor/**/*"
 
+Layout/EmptyLineBetweenDefs:
+  Enabled: false
+
 # Private methods indent.
 Layout/IndentationConsistency:
   EnforcedStyle: indented_internal_methods
