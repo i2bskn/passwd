@@ -37,12 +37,13 @@ module Passwd::Rails
       end
 
       def require_signin
-        unless signin?
-          path = _signin_path
-          raise UnauthorizedAccess unless path
-          session[:referer] = request.fullpath
-          redirect_to path
-        end
+        return if signin?
+
+        path = _signin_path
+        raise UnauthorizedAccess unless path
+
+        session[:referer] = request.fullpath
+        redirect_to path
       end
 
       def passwd_auth_class

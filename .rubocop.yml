@@ -19,6 +19,9 @@ Layout/LineLength:
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented_relative_to_receiver
 
+Layout/SpaceInsideBlockBraces:
+  SpaceBeforeBlockParameters: false
+
 Lint/AmbiguousBlockAssociation:
   Exclude:
     - "spec/**/*_spec.rb"

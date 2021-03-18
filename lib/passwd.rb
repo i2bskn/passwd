@@ -12,9 +12,7 @@ class Passwd
       @current ||= new
     end
 
-    def current=(passwd)
-      @current = passwd
-    end
+    attr_writer :current
   end
 
   def initialize(conf = nil)
@@ -22,13 +20,13 @@ class Passwd
   end
 
   def hashed_password(plain, salt)
-    config.stretching.to_i.times.with_object([digest_class.hexdigest([plain, salt].join)]) { |_, pass|
+    config.stretching.to_i.times.with_object([digest_class.hexdigest([plain, salt].join)]) {|_, pass|
       pass[0] = digest_class.hexdigest(pass[0])
     }.first
   end
 
-  def random(n = nil)
-    Array.new(n || config.length) { config.characters[rand(config.characters.size)] }.join
+  def random(long = nil)
+    Array.new(long || config.length) { config.characters[rand(config.characters.size)] }.join
   end
 
   def config

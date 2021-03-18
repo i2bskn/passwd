@@ -7,7 +7,7 @@ class Passwd
       :characters,
     ].freeze
 
-    attr_accessor *VALID_OPTIONS
+    attr_accessor(*VALID_OPTIONS)
 
     def initialize(options = {})
       reset
@@ -15,7 +15,7 @@ class Passwd
     end
 
     def merge(options)
-      options.keys.each { |key| send("#{key}=", options[key]) }
+      options.each_key {|key| send("#{key}=", options[key]) }
       self
     end
 
