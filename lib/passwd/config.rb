@@ -1,13 +1,12 @@
 class Passwd
   class Config
     VALID_OPTIONS = [
-      :algorithm,
       :stretching,
       :length,
       :characters,
     ].freeze
 
-    attr_accessor *VALID_OPTIONS
+    attr_accessor(*VALID_OPTIONS)
 
     def initialize(options = {})
       reset
@@ -15,13 +14,12 @@ class Passwd
     end
 
     def merge(options)
-      options.keys.each { |key| send("#{key}=", options[key]) }
+      options.each_key {|key| send("#{key}=", options[key]) }
       self
     end
 
     def reset
-      @algorithm  = :sha512
-      @stretching = 100
+      @stretching = 12
       @length     = 10
       @characters = [("a".."z"), ("A".."Z"), ("0".."9")].map(&:to_a).flatten
     end

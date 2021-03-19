@@ -1,6 +1,4 @@
-require "digest"
-require "securerandom"
-
+require "bcrypt"
 require "passwd/version"
 require "passwd/errors"
 require "passwd/config"
@@ -12,32 +10,26 @@ class Passwd
       @current ||= new
     end
 
-    def current=(passwd)
-      @current = passwd
-    end
+    attr_writer :current
   end
 
   def initialize(conf = nil)
     @config = conf
   end
 
-  def hashed_password(plain, salt)
-    config.stretching.to_i.times.with_object([digest_class.hexdigest([plain, salt].join)]) { |_, pass|
-      pass[0] = digest_class.hexdigest(pass[0])
-    }.first
+  def password_hashing(plain)
+    BCrypt::Password.create(plain, cost: config.stretching.clamp(BCrypt::Engine::MIN_COST, BCrypt::Engine::MAX_COST))
   end
 
-  def random(n = nil)
-    Array.new(n || config.length) { config.characters[rand(config.characters.size)] }.join
+  def load_password(hashed_password)
+    BCrypt::Password.new(hashed_password)
+  end
+
+  def random(long = nil)
+    Array.new(long || config.length) { config.characters[rand(config.characters.size)] }.join
   end
 
   def config
     @config ||= Config.new
   end
-
-  private
-
-    def digest_class
-      Digest.const_get(config.algorithm.upcase)
-    end
 end
